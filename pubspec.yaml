@@ -18,6 +18,7 @@ dependencies:
   flutter_native_splash: ^2.4.4
 
   #icons
+  iconsax: ^0.0.8
   cupertino_icons: ^1.0.8
 
   #fonts
@@ -38,7 +39,6 @@ flutter:
 
   assets:
     - assets/fonts/
-    - assets/vectors/
     - assets/images/
 
   fonts:

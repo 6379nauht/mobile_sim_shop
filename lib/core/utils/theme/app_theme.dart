@@ -9,6 +9,8 @@ import 'package:mobile_sim_shop/core/utils/theme/custom_themes/outlined_button_t
 import 'package:mobile_sim_shop/core/utils/theme/custom_themes/text_field_theme.dart';
 import 'package:mobile_sim_shop/core/utils/theme/custom_themes/text_theme.dart';
 
+import '../../../ common/helpers/helper_functions.dart';
+
 class AppTheme {
   AppTheme._();
 
@@ -30,9 +32,9 @@ class AppTheme {
   static ThemeData darkTheme = ThemeData(
       useMaterial3: true,
       fontFamily: 'Montserrat',
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppHelperFunctions.getColor('black'),
       textTheme: AppTextTheme.darkTextTheme,
       chipTheme: AppChipTheme.darkChipTheme,
       appBarTheme: AppAppBarTheme.darkAppBarTheme,

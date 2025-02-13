@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_sim_shop/core/utils/theme/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobile_sim_shop/presentation/auth/pages/login/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,14 +23,14 @@ class App extends StatelessWidget {
     );
 
     return MaterialApp(
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       builder: (_, child) {
         return child!;
       },
-      home: Container(), // HomePage của bạn ở đây
+      home: const LoginPage(), // HomePage của bạn ở đây
     );
   }
 }
