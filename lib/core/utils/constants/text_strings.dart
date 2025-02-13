@@ -5,6 +5,7 @@ class AppTexts {
   static const String appName = "S-Store";
   static const String aContinue = "Continue";
   static const String add = "add";
+  static const String done = "Done";
 
 
   //Auth Form Text
@@ -35,5 +36,11 @@ class AppTexts {
   static const String forgetPasswordTitle = "Forget Password";
   static const String forgetPasswordSubTitle = "Don't worry sometimes people can forget too, enter your email and we will send you a password reset link.";
   static const String changeYourPassword = "Password Reset Email Sent";
-
+  static const String confirmEmail = "Verify your email address!";
+  static const String supportEmail = "6379nauht@gmail.com";
+  static const String confirmEmailSubTitle =  "We have sent a verification email. Please check your inbox and follow the instructions.";
+  static const String accountSuccessTitle = "Your account successfully created!";
+  static const String accountSuccessSubTitle = "Welcome! Your account has been created successfully. Enjoy your experience with us.";
+  static const String changeYourPasswordTitle = "Password Reset Email Sent";
+  static const String changeYourPasswordSubTitle = "For your security, choose a password that you haven't used before.";
 }

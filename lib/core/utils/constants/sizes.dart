@@ -61,6 +61,9 @@ class AppSizes {
   //Image carousel height
   static const double imageCarouselHeight = 200.0;
 
+  //Image verify
+  static const double imageWidth = 0.4;
+
   //Loading indicator size
   static const double loadingIndicatorSize = 36.0;
 

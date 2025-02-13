@@ -16,7 +16,7 @@ class SignupPage extends StatelessWidget {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(AppSizes.defaultSpace),
+          padding: EdgeInsets.all(AppSizes.defaultSpace.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -25,7 +25,7 @@ class SignupPage extends StatelessWidget {
                 AppTexts.signupTitle,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              const SizedBox(height: AppSizes.spaceBtwSections,),
+              SizedBox(height: AppSizes.spaceBtwSections.h,),
 
               //Form
               const SignupForm(),

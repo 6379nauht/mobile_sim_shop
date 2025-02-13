@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:mobile_sim_shop/%20common/navigators/navigator.dart';
+import 'package:mobile_sim_shop/presentation/auth/pages/signup/verify_email.dart';
 import 'package:mobile_sim_shop/presentation/auth/pages/signup/widgets/terms_conditions_checkbox.dart';
 
-import '../../../../../ common/helpers/helper_functions.dart';
 import '../../../../../core/utils/constants/sizes.dart';
 import '../../../../../core/utils/constants/text_strings.dart';
 
@@ -14,8 +15,6 @@ class SignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = AppHelperFunctions.isDarkMode(context);
-
     return Form(
       child: Column(
         children: [
@@ -31,8 +30,8 @@ class SignupForm extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: AppSizes.spaceBtwInputFields,
+              SizedBox(
+                width: AppSizes.spaceBtwInputFields.w,
               ),
 
               //lastname
@@ -104,7 +103,7 @@ class SignupForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => AppNavigator.push(context, const VerifyEmailPage()),
                 child: const Text(AppTexts.createAccount)),
           ),
         ],

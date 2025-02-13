@@ -10,4 +10,8 @@ class AppImages {
   static const String google = '${basePath}google.png';
   static const String facebook = '${basePath}facebook.png';
 
+  //Verify email
+  static const String emailVerify = '${basePath}email_verify.png';
+  static const String success = '${basePath}success.png';
+
 }

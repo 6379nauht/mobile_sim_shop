@@ -16,6 +16,10 @@ class AppNavigator {
     );
   }
 
+  static void pop(BuildContext context) {
+    Navigator.pop(context);
+  }
+
   static void pushAndRemove(BuildContext context,Widget widget) {
     Navigator.pushAndRemoveUntil(
         context,
