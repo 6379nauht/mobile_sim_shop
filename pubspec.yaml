@@ -11,11 +11,25 @@ dependencies:
   flutter:
     sdk: flutter
 
-  intl: ^0.20.2
+  intl: ^0.19.0
   logger: ^2.5.0
-
+  flutter_screenutil: ^5.9.3
+  equatable: ^2.0.7
+  flutter_bloc: ^9.0.0
+  carousel_slider: ^5.0.0
+  awesome_snackbar_content: ^0.1.5
   #screen splash
   flutter_native_splash: ^2.4.4
+
+  #firebase
+  firebase_core: ^3.11.0
+  dartz: ^0.10.1
+  get_it: ^8.0.3
+  firebase_auth: ^5.4.2
+  snapshot: ^0.2.6+1
+  cloud_firestore: ^5.6.3
+  connectivity_plus: ^6.1.3
+  lottie: ^2.7.0
 
   #icons
   iconsax: ^0.0.8
@@ -24,7 +38,8 @@ dependencies:
   #fonts
   google_fonts: ^6.2.1
 
-  flutter_screenutil: ^5.9.3
+  #local source
+  shared_preferences: ^2.5.2
 
 
 dev_dependencies:
@@ -41,6 +56,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/animations/
+    - assets/icons/categories/
   fonts:
     - family: Montserrat
       fonts:

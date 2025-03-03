@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "81162572596",
+    "project_id": "mobliesimapp",
+    "storage_bucket": "mobliesimapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81162572596:android:5d0fb6a2b07fc296d7cb61",
+        "android_client_info": {
+          "package_name": "com.example.mobile_sim_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81162572596-dj9fq3ur6cub9c7tmegcuuv2pm2jvai3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobile_sim_shop",
+            "certificate_hash": "5fb22421238da8316cad245dbd0863a46871e45c"
+          }
+        },
+        {
+          "client_id": "81162572596-3r0t6irmm9omm0a28m4b5b555612esre.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg6v9St4B-lSZwmzkANzy197-c5qj7NsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81162572596-3r0t6irmm9omm0a28m4b5b555612esre.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "81162572596-fpemlkb85m0b3e0o8r20ufhabv3m3ptb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mobileSimShop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

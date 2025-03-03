@@ -1,36 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_sim_shop/core/utils/theme/app_theme.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile_sim_shop/presentation/auth/pages/login/login.dart';
+import 'package:mobile_sim_shop/core/dependency_injection/locator.dart';
+import 'package:mobile_sim_shop/firebase_options.dart';
 
-void main() async {
+import 'app.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Khởi tạo ScreenUtil đúng cách, nhận BuildContext trong builder
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  //Initialize GetIt
+  await setupLocator();
+
   runApp(const App());
-}
 
-class App extends StatelessWidget {
-  const App({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Khởi tạo ScreenUtil trong builder của MaterialApp với BuildContext
-    ScreenUtil.init(
-      context,
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-    );
-
-    return MaterialApp(
-      themeMode: ThemeMode.system,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      debugShowCheckedModeBanner: false,
-      builder: (_, child) {
-        return child!;
-      },
-      home: const LoginPage(), // HomePage của bạn ở đây
-    );
-  }
 }

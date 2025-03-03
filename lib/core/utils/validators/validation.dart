@@ -5,9 +5,9 @@ class AppValidator {
     if(value == null || value.isEmpty) {
       return 'Email is required.';
     }
-    final emailRegExp = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+    final emailRegExp = RegExp(r"^[^@]+@[^@]+\.[^@]+$");
 
-    if(!emailRegExp.hasMatch(value)) {
+    if(!emailRegExp.hasMatch(value.trim())) {
       return 'Invalid email address.';
     }
     return null;
