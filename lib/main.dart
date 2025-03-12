@@ -11,7 +11,6 @@ Future<void> main() async {
 
   //Initialize GetIt
   await setupLocator();
-
   runApp(const App());
 
 }

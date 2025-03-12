@@ -7,9 +7,10 @@ import '../../../../core/utils/constants/colors.dart';
 
 class UserProfileTile extends StatelessWidget {
   const UserProfileTile({
-    super.key,
+    super.key, required this.onPressed,
   });
 
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -32,7 +33,7 @@ class UserProfileTile extends StatelessWidget {
               .apply(color: AppColors.white),
         ),
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: onPressed,
           icon: const Icon(
             Iconsax.edit,
             color: AppColors.white,

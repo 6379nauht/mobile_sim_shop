@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:mobile_sim_shop/features/auth/presentation/pages/password_configuration/reset_password.dart';
-
-import '../../../../../core/navigators/navigator.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../../../core/utils/constants/sizes.dart';
 import '../../../../../core/utils/constants/text_strings.dart';
 
 
-class ForgetPassword extends StatelessWidget {
-  const ForgetPassword({super.key});
+class ForgetPasswordPage extends StatelessWidget {
+  const  ForgetPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class ForgetPassword extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                   onPressed: () =>
-                      AppNavigator.pushReplacement(context, const ResetPassword()),
+                      context.goNamed(Routes.resetPasswordName),
                   child: const Text(AppTexts.submit)),
             )
           ],

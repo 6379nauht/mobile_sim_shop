@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_sim_shop/core/dependency_injection/locator.dart';
 import 'package:mobile_sim_shop/core/network/network_bloc.dart';
+import 'package:mobile_sim_shop/core/router/app_router.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/check_email_verification_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/delete_user_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/get_remember_me_usecase.dart';
@@ -15,7 +16,6 @@ import 'package:mobile_sim_shop/features/store/presentation/blocs/search_day_yea
 
 import 'core/utils/theme/app_theme.dart';
 import 'features/auth/presentation/blocs/signin/signin_event.dart';
-import 'features/auth/presentation/pages/signin/signin.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -60,15 +60,12 @@ class App extends StatelessWidget {
           create: (_) => SearchDayYearBloc(),
         )
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
+        routerConfig: AppRouter.router, // Sử dụng GoRouter
         themeMode: ThemeMode.system,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
-        builder: (_, child) {
-          return child!;
-        },
-        home: const SigninPage(), // HomePage của bạn ở đây
       ),
     );
   }

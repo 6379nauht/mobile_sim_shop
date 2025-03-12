@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:mobile_sim_shop/core/navigators/navigator.dart';
 
 import '../../utils/constants/sizes.dart';
 
@@ -27,7 +27,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         leading: showBackArrow
             ? IconButton(
-                onPressed: () => AppNavigator.pop(context),
+                onPressed: () => context.pop(context),
                 icon: const Icon(Iconsax.arrow_left))
             : leadingIcon != null ? IconButton(
                 onPressed: leadingOnPressed,

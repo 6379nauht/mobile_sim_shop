@@ -3,16 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile_sim_shop/core/router/routes.dart';
 import 'package:mobile_sim_shop/core/utils/constants/sizes.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signup/signup_bloc.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signup/signup_event.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signup/signup_state.dart';
-import '../../../../../core/navigators/navigator.dart';
 import '../../../../../core/popups/full_page_loader.dart';
 import '../../../../../core/utils/constants/image_strings.dart';
 import '../../../../../core/utils/constants/text_strings.dart';
-import '../../../../../core/widgets/success_page/success_page.dart';
-import '../signin/signin.dart';
 
 class VerifyEmailPage extends StatelessWidget {
   const VerifyEmailPage({super.key});
@@ -22,20 +21,12 @@ class VerifyEmailPage extends StatelessWidget {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state.status == SignupStatus.success) {
-          AppNavigator.push(
-            context,
-            SuccessPage(
-              image: AppImages.success,
-              title: AppTexts.accountSuccessTitle,
-              subTitle: AppTexts.accountSuccessSubTitle,
-              onPressed: () => AppNavigator.push(context, const SigninPage()),
-            ),
-          );
+          context.goNamed(Routes.verifySuccess);
         }
 
         ///Chuyển về trang loginPage
         if (state.status == SignupStatus.initial) {
-          AppNavigator.pushAndRemove(context, const SigninPage());
+          context.pop(context);
         }
 
         ///Dừng loading

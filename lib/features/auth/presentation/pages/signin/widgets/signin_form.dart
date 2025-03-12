@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_bloc.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_event.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/pages/settings/settings.dart';
-import '../../../../../../core/navigators/navigator.dart';
+
+import '../../../../../../core/router/routes.dart';
 import '../../../../../../core/utils/constants/sizes.dart';
 import '../../../../../../core/utils/constants/text_strings.dart';
 import '../../../../../../core/utils/validators/validation.dart';
 import '../../../blocs/signin/signin_state.dart';
-import '../../password_configuration/forget_password.dart';
-import '../../signup/signup.dart';
 
 class SigninForm extends StatefulWidget {
   const SigninForm({super.key});
@@ -114,8 +113,7 @@ class _SigninFormState extends State<SigninForm> {
 
                           //forget password
                           TextButton(
-                              onPressed: () => AppNavigator.push(
-                                  context, const ForgetPassword()),
+                              onPressed: () => context.pushNamed(Routes.forgetPasswordName),
                               child: const Text(AppTexts.forgetPassword)),
                         ],
                       ),
@@ -137,8 +135,9 @@ class _SigninFormState extends State<SigninForm> {
                                         }
                                       };
                                 */
-                              () => AppNavigator.push(
-                                  context, const SettingsPage()),
+                              () {
+                            context.goNamed(Routes.homeName);
+                          },
                           child: state.status == SigninStatus.loading
                               ? const CircularProgressIndicator()
                               : const Text(AppTexts.signIn),
@@ -152,8 +151,7 @@ class _SigninFormState extends State<SigninForm> {
                       SizedBox(
                           width: double.infinity,
                           child: OutlinedButton(
-                              onPressed: () => AppNavigator.push(
-                                  context, const SignupPage()),
+                              onPressed: () => context.pushNamed(Routes.signupName),
                               child: const Text(AppTexts.createAccount)))
                     ],
                   ),

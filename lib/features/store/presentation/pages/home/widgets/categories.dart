@@ -20,7 +20,7 @@ class Categories extends StatelessWidget {
         children: [
           ///Heading
           const SectionHeading(
-            title: 'Sim Theo Mạng',
+            title: 'Danh mục',
             showActionButton: false,
             textColor: AppColors.white,
           ),
@@ -32,11 +32,11 @@ class Categories extends StatelessWidget {
           SizedBox(
             height: 80.h,
             child: ListView.builder(
-              itemCount: 4,
+              itemCount: 6,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (_, index) {
-                return VerticalImageText(image: AppImages.iconViettel, onTap: (){},);
+                return VerticalImageText(image: AppImages.iconPhone, onTap: (){}, title: 'Điện thoại',);
               },
             ),
           ),

@@ -2,12 +2,13 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_sim_shop/core/popups/loaders.dart';
+import 'package:mobile_sim_shop/core/router/app_router.dart';
+import 'package:mobile_sim_shop/core/router/routes.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signup/signup_bloc.dart';
-import 'package:mobile_sim_shop/features/auth/presentation/pages/signup/verify_email.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/pages/signup/widgets/signup_form.dart';
 
-import '../../../../../core/navigators/navigator.dart';
 import '../../../../../core/popups/full_page_loader.dart';
 import '../../../../../core/utils/constants/image_strings.dart';
 import '../../../../../core/utils/constants/sizes.dart';
@@ -63,7 +64,8 @@ class _SignupPageState extends State<SignupPage> {
               );
 
               /// Chuyển trang sang VerifyEmailPage
-              AppNavigator.push(context, const VerifyEmailPage());
+              context.goNamed(Routes.verifyEmailName);
+
               /// Đánh dấu đã hiển thị thành công để tránh hiển thị lại
               context.read<SignupBloc>().add(MarkSuccessShown());
             }

@@ -17,7 +17,7 @@ class AppTheme {
       fontFamily: 'Montserrat',
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.light,
+      scaffoldBackgroundColor: AppColors.white,
       textTheme: AppTextTheme.lightTextTheme,
       chipTheme: AppChipTheme.lightChipTheme,
       appBarTheme: AppAppBarTheme.lightAppBarTheme,

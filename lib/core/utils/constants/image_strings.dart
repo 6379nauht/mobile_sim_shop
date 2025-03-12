@@ -5,6 +5,7 @@ class AppImages {
   //App logo
   static const String darkAppLogo = '${basePath}koala.png';
   static const String lightAppLogo = '${basePath}koala.png';
+  static const String iphone13prm = '${basePath}iphone13prm.png';
 
   //banner
   static const String banner1 =  '${basePath}banner1.jpg';
@@ -24,7 +25,7 @@ class AppImages {
 
   //icons
   static const basePathIconCategories = 'assets/icons/categories/';
-  static const String iconViettel = '${basePathIconCategories}icon_viettel.png';
+  static const String iconPhone = '${basePathIconCategories}icon_phone.png';
 
 
 }

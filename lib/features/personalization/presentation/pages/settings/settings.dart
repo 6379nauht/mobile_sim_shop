@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:mobile_sim_shop/core/router/routes.dart';
 import 'package:mobile_sim_shop/core/widgets/appbar/appbar.dart';
 import 'package:mobile_sim_shop/core/widgets/custom_shapes/containers/circular_container.dart';
 import 'package:mobile_sim_shop/core/widgets/custom_shapes/containers/primary_header_container.dart';
@@ -34,7 +36,10 @@ class SettingsPage extends StatelessWidget {
                 ),
 
                 ///Profile tile
-                const UserProfileTile(),
+                UserProfileTile(
+                  onPressed: () =>
+                    context.pushNamed(Routes.profileName),
+                ),
                 SizedBox(
                   height: AppSizes.spaceBtwSections.h,
                 ),
@@ -127,13 +132,17 @@ class SettingsPage extends StatelessWidget {
                   ),
 
                   ///Sign out Button
-                  SizedBox(height: AppSizes.spaceBtwSections.h,),
+                  SizedBox(
+                    height: AppSizes.spaceBtwSections.h,
+                  ),
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(onPressed: () {},
-                        child: const Text('Đăng xuất')),
+                    child: OutlinedButton(
+                        onPressed: () {}, child: const Text('Đăng xuất')),
                   ),
-                  SizedBox(height: AppSizes.spaceBtwSections.h * 2.5,)
+                  SizedBox(
+                    height: AppSizes.spaceBtwSections.h * 2.5,
+                  )
                 ],
               ),
             ),
