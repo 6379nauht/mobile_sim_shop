@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mobile_sim_shop/core/helpers/helper_functions.dart';
 import 'package:mobile_sim_shop/core/styles/shadow_style.dart';
@@ -12,13 +13,15 @@ import 'package:mobile_sim_shop/core/widgets/images/rounded_image.dart';
 import 'package:mobile_sim_shop/core/widgets/text/brand_title_text_icon.dart';
 import 'package:mobile_sim_shop/core/widgets/text/product_title_text.dart';
 
+import '../../../router/routes.dart';
+
 class ProductCardVertical extends StatelessWidget {
   const ProductCardVertical({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () =>  context.pushNamed(Routes.productDetailsName),
       child: Container(
         width: 180.w,
         padding: EdgeInsets.all(1.w),
@@ -106,9 +109,10 @@ class ProductCardVertical extends StatelessWidget {
                           '12.000.000 VND',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 16.sp),
+                          style: Theme.of(context).textTheme.titleLarge
                         ),
                       ),
+
                       Container(
                         decoration: BoxDecoration(
                             color: AppColors.dark,

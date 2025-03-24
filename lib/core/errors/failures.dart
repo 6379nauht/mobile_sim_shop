@@ -10,3 +10,8 @@ class AuthFailure extends Failure {
 class ServerFailure extends Failure {
   ServerFailure(super.message);
 }
+
+class EmailVerificationRequiredFailure extends Failure {
+  EmailVerificationRequiredFailure(super.message);
+
+}

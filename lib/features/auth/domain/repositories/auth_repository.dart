@@ -15,8 +15,13 @@ abstract class AuthRepository {
 
   //Sign in
   Future<Either<Failure,UserModel>> signin(UserModel user);
+  Future<Either<Failure, void>> signOut();
+  Future<Either<Failure, UserModel?>> getCurrentUser();
 
   //RememberMe
   Future<Either<Failure, void>> saveRememberMe(SaveEmailModel remember);
   Future<Either<Failure, SaveEmailModel>> getRememberMe();
+  Future<Either<Failure, UserModel>> signInWithGoogle();
+  Future<Either<Failure, void>> resetPassword(String email);
+
 }

@@ -1,8 +1,10 @@
 class Routes {
   Routes._(); // Private constructor to prevent instantiation
+  // Thêm route khởi đầu
+  static const String initialRoute = '/';
 
-  ///Authentication
-  static const signin = '/';
+  ///Authentication Path
+  static const signin = '/signin';
   static const signup = '/signup';
   static const forgetPassword = '/forget_password';
   static const resetPassword = '/reset_password';
@@ -18,16 +20,39 @@ class Routes {
   static const verifySuccessName = 'verify_success';
 
 
-  static const home = '/home';
-  static const store = '/store';
-  static const orders = '/orders';
+  ///Personalization Path
   static const settings = '/settings';
   static const profile = '/profile';
+  static const address = '/address';
+  static const addNewAddress = '/add_new_address';
 
-  static const homeName = 'home';
+  ///Personalization Name
   static const profileName = 'profile';
-  static const storeName = 'store';
+  static const addressName = 'address';
+  static const addNewAddressName = 'add_new_address';
 
+
+
+  ///Store Path
+  static const home = '/home';
+  static const store = '/store';
+  static const wishlist = '/wishlist';
+  static const productDetails = '/product_details';
+  static const cart = '/cart';
+  static const checkout = '/check_out';
+  static const checkoutSuccess = '/check_out_success';
+  static const order = '/order';
+  static const subCategories= '/sub_categories';
+
+  ///Store Name
+  static const homeName = 'home';
+  static const storeName = 'store';
+  static const productDetailsName = 'product_details';
+  static const cartName = 'cart';
+  static const checkoutName = 'check_out';
+  static const checkoutSuccessName = 'check_out_success';
+  static const orderName = 'order';
+  static const subCategoriesName = 'sub_categories';
 
 
 
@@ -37,7 +62,7 @@ class Routes {
   static const List<String> all = [
     home,
     store,
-    orders,
-    settings
+    wishlist,
+    settings,
   ];
 }

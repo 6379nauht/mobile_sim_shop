@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile_sim_shop/core/utils/constants/colors.dart';
 import 'package:mobile_sim_shop/core/utils/constants/image_strings.dart';
 import 'package:mobile_sim_shop/core/utils/constants/sizes.dart';
 import 'package:mobile_sim_shop/core/widgets/custom_shapes/containers/primary_header_container.dart';
@@ -12,7 +11,6 @@ import 'package:mobile_sim_shop/features/store/presentation/pages/home/widgets/c
 import 'package:mobile_sim_shop/features/store/presentation/pages/home/widgets/categories.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/home/widgets/home_appbar.dart';
 
-import '../../../../../core/widgets/button/price_button.dart';
 import '../../../../../core/widgets/products/product_cards/product_card_vertical.dart';
 
 class HomePage extends StatelessWidget {

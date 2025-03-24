@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../helpers/helper_functions.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
 
 class CircularImage extends StatelessWidget {

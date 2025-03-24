@@ -21,12 +21,12 @@ class VerifyEmailPage extends StatelessWidget {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state.status == SignupStatus.success) {
-          context.goNamed(Routes.verifySuccess);
+          context.goNamed(Routes.verifySuccessName);
         }
 
         ///Chuyển về trang loginPage
         if (state.status == SignupStatus.initial) {
-          context.pop(context);
+          context.goNamed(Routes.signupName);
         }
 
         ///Dừng loading

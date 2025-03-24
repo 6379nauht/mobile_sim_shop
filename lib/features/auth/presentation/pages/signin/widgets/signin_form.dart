@@ -27,22 +27,6 @@ class _SigninFormState extends State<SigninForm> {
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
-        child: BlocListener<SigninBloc, SigninState>(
-            listenWhen: (previous, current) =>
-                previous.status != current.status,
-            listener: (context, state) {
-              if (state.status == SigninStatus.initial) {
-                context.read<SigninBloc>().add(LoadRememberMe());
-              } else if (state.status == SigninStatus.success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Đăng nhập thành công!")),
-                );
-              } else if (state.status == SigninStatus.failure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Đăng nhập thất bại!")),
-                );
-              }
-            },
             child: BlocBuilder<SigninBloc, SigninState>(
               builder: (context, state) {
                 return Padding(
@@ -52,9 +36,10 @@ class _SigninFormState extends State<SigninForm> {
                     children: [
                       //Email
                       TextFormField(
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Iconsax.direct_right),
-                          labelText: state.email,
+                        initialValue: state.email,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Iconsax.direct_right),
+                          labelText: AppTexts.email,
                         ),
                         validator: AppValidator.validateEmail,
                         onChanged: (value) =>
@@ -125,7 +110,7 @@ class _SigninFormState extends State<SigninForm> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: /*
+                          onPressed:
                                 state.status == SigninStatus.loading
                                     ? null
                                     : () {
@@ -133,11 +118,8 @@ class _SigninFormState extends State<SigninForm> {
                                         if (_formKey.currentState!.validate()) {
                                           context.read<SigninBloc>().add(const SigninSubmitted());
                                         }
-                                      };
-                                */
-                              () {
-                            context.goNamed(Routes.homeName);
-                          },
+                                      },
+
                           child: state.status == SigninStatus.loading
                               ? const CircularProgressIndicator()
                               : const Text(AppTexts.signIn),
@@ -157,6 +139,6 @@ class _SigninFormState extends State<SigninForm> {
                   ),
                 );
               },
-            )));
+            ));
   }
 }

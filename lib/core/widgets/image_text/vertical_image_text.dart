@@ -25,38 +25,43 @@ class VerticalImageText extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(right: AppSizes.spaceBtwItems.w),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Căn giữa dọc
+            crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa ngang
             children: [
               Container(
-                width: 56.w,
-                height: 56.h,
-                padding: EdgeInsets.all(AppSizes.sm.w),
-                decoration: BoxDecoration(
-                  color: backgroundColor ??
-                      (AppHelperFunctions.isDarkMode(context)
-                          ? AppColors.black
-                          : AppColors.white),
-                  shape: BoxShape.circle
-                ),
-                child: Center(
-                  child: Image(
-                    image: AssetImage(image),
-                    fit: BoxFit.cover,
-                    color: AppHelperFunctions.isDarkMode(context)
-                        ? AppColors.light
-                        : AppColors.dark,
-                  ),
-                ),
-              ),
+                  width: 56.w,
+                  height: 56.h,
+                  padding: EdgeInsets.all(AppSizes.sm.w),
+                  decoration: BoxDecoration(
+                      color: backgroundColor, shape: BoxShape.circle),
+                  child: Center(
+                    child: Image(
+                      image: NetworkImage(image),
+                      fit: BoxFit.cover,
+                      color: AppHelperFunctions.isDarkMode(context)
+                          ? AppColors.light
+                          : AppColors.dark,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const CircularProgressIndicator();
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.error);
+                      },
+                    ),
+                  )),
+              SizedBox(height: AppSizes.spaceBtwItems.h /2),
               SizedBox(
-                width: 55.w,
+                width: 56.w,
                 child: Text(
                   title,
                   style: Theme.of(context)
                       .textTheme
-                      .labelMedium!
+                      .labelSmall!
                       .apply(color: AppColors.white),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
               )
             ],

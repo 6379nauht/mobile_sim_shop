@@ -14,7 +14,7 @@ class ProfileMenu extends StatelessWidget {
   });
 
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String title, value;
   @override
   Widget build(BuildContext context) {

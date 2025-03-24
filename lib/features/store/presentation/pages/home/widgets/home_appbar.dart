@@ -1,5 +1,10 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile_sim_shop/core/router/routes.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
 
 import '../../../../../../core/utils/constants/colors.dart';
 import '../../../../../../core/utils/constants/text_strings.dart';
@@ -24,19 +29,23 @@ class HomeAppBar extends StatelessWidget {
                 .labelMedium!
                 .apply(color: AppColors.grey),
           ),
-          Text(
-            AppTexts.homeAppBarSubTitle,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall!
-                .apply(color: AppColors.light),
-          ),
+          BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (_, state) {
+              return Text(
+                state.user?.fullName ?? '',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .apply(color: AppColors.light),
+              );
+            },
+          )
         ],
       ),
       actions: [
         CartCounterIcon(
           iconColor: AppColors.light,
-          onPressed: () {},
+          onPressed: () => context.pushNamed(Routes.cartName),
         )
       ],
     );

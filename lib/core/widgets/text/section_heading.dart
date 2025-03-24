@@ -1,7 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile_sim_shop/core/utils/constants/colors.dart';
 
 
 class SectionHeading extends StatelessWidget {
@@ -21,12 +19,6 @@ class SectionHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 4.w,
-          height: 20.h,
-          color: AppColors.accent,
-          margin: EdgeInsets.only(right: 8.w),
-        ),
         Expanded(
           child: Text(
             title,

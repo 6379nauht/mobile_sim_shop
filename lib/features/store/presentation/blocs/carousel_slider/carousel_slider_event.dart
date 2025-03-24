@@ -12,5 +12,5 @@ class ChangeSliderEvent extends CarouselEvent {
   const ChangeSliderEvent({required this.newIndex});
 
   @override
-  List<Object> get props => [newIndex];
+  List<Object?> get props => [newIndex];
 }

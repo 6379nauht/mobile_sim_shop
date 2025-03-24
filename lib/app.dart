@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,13 +7,25 @@ import 'package:mobile_sim_shop/core/network/network_bloc.dart';
 import 'package:mobile_sim_shop/core/router/app_router.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/check_email_verification_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/delete_user_usecase.dart';
+import 'package:mobile_sim_shop/features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/get_remember_me_usecase.dart';
+import 'package:mobile_sim_shop/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/save_remember_me_usecase.dart';
+import 'package:mobile_sim_shop/features/auth/domain/usecases/signin_usecase.dart';
+import 'package:mobile_sim_shop/features/auth/domain/usecases/signin_with_google_usecase.dart';
+import 'package:mobile_sim_shop/features/auth/domain/usecases/signout_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:mobile_sim_shop/features/auth/presentation/blocs/password_configuration/password_configuration_bloc.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_bloc.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signup/signup_bloc.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/delete_account_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_user_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_event.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_categories_usecase.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_bloc.dart';
-import 'package:mobile_sim_shop/features/store/presentation/blocs/search_day_year/search_day_year_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_event.dart';
 
 import 'core/utils/theme/app_theme.dart';
 import 'features/auth/presentation/blocs/signin/signin_event.dart';
@@ -47,17 +60,41 @@ class App extends StatelessWidget {
         ///Signin
         BlocProvider<SigninBloc>(
             create: (_) => SigninBloc(
-                getIt<GetRememberMeUseCase>(), getIt<SaveRememberMeUseCase>())
-              ..add(LoadRememberMe())),
+                getIt<GetRememberMeUseCase>(),
+                getIt<SaveRememberMeUseCase>(),
+                getIt<SigninUsecase>(),
+                getIt<GetCurrentUserUsecase>(),
+                getIt<SignOutUsecase>(),
+                getIt<SignInWithGoogleUsecase>())
+              ..add(LoadRememberMe())
+              ..add(CheckStatusSignIn())),
+
+        ///ResetPassword
+        BlocProvider<PasswordConfigurationBloc>(
+          create: (_) => PasswordConfigurationBloc(
+            getIt<ResetPasswordUsecase>(),
+          ),
+        ),
 
         ///Carousel
         BlocProvider<CarouselBloc>(
           create: (_) => CarouselBloc(),
         ),
 
-        ///Search
-        BlocProvider<SearchDayYearBloc>(
-          create: (_) => SearchDayYearBloc(),
+        ///Profile
+        BlocProvider<ProfileBloc>(
+          create: (_) => ProfileBloc(
+            getIt<GetCurrentUserUsecase>(),
+            getIt<UpdateUserUsecase>(),
+            getIt<DeleteAccountUsecase>(),
+          )..add(LoadProfile())
+        ),
+
+        ///Category
+        BlocProvider<CategoryBloc>(
+          create: (_) => CategoryBloc(
+            getIt<GetAllCategoriesUsecase>()
+          )..add(LoadCategories())
         )
       ],
       child: MaterialApp.router(

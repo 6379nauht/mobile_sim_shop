@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile_sim_shop/app.dart';
 import 'package:mobile_sim_shop/core/utils/constants/colors.dart';
 
 class SettingsMenuTile extends StatelessWidget {

@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 abstract class SigninEvent extends Equatable {
@@ -6,6 +5,10 @@ abstract class SigninEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
+
+/// Trạng thái ban đầu
+class LoadRememberMe extends SigninEvent {}
+class CheckStatusSignIn extends SigninEvent {}
 
 class EmailChanged extends SigninEvent {
   final String email;
@@ -27,8 +30,6 @@ class SigninSubmitted extends SigninEvent {
   const SigninSubmitted();
 }
 
-class LoadRememberMe extends SigninEvent {}
-
 class ToggleRememberMe extends SigninEvent {
   final bool value;
   const ToggleRememberMe(this.value);
@@ -36,3 +37,7 @@ class ToggleRememberMe extends SigninEvent {
   @override
   List<Object> get props => [value];
 }
+
+class MarkErrorAsShown extends SigninEvent {}
+class SignOutEvent extends SigninEvent{}
+class SignInWithGoogle extends SignOutEvent{}
