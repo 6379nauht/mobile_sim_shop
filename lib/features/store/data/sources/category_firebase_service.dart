@@ -7,6 +7,7 @@ import '../models/category_model.dart';
 
 abstract class CategoryFirebaseService {
   Future<Either<Failure, List<CategoryModel>>>getAllCategories();
+  Stream<Either<Failure, List<CategoryModel>>> fetchSubCategories(String parentId);
 }
 
 class CategoryFirebaseServiceImpl implements CategoryFirebaseService {
@@ -30,6 +31,29 @@ class CategoryFirebaseServiceImpl implements CategoryFirebaseService {
       // Xử lý lỗi chung
       return Left(ServerFailure('Đã xảy ra lỗi: $e'));
     }
+  }
+
+  @override
+  Stream<Either<Failure, List<CategoryModel>>> fetchSubCategories(String parentId) {
+    final Stream<Either<Failure, List<CategoryModel>>> stream =
+    getIt<FirebaseFirestore>()
+        .collection('categories')
+        .where('parentId', isEqualTo: parentId)
+        .snapshots()
+        .map((snapshot) {
+      try {
+        final variations = snapshot.docs
+            .map((doc) => CategoryModel.fromSnapshot(doc))
+            .toList();
+        return Right<Failure, List<CategoryModel>>(variations);
+      } catch (e) {
+        return Left<Failure, List<CategoryModel>>(ServerFailure('Error streaming variations: $e'));
+      }
+    })
+        .handleError((e) {
+      return Left<Failure, List<CategoryModel>>(ServerFailure('Stream error: $e'));
+    });
+    return stream;
   }
 
 }

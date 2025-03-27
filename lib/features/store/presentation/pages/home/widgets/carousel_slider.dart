@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile_sim_shop/features/store/data/models/banner_model.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_event.dart';
 
@@ -10,7 +12,7 @@ import '../../../../../../core/widgets/images/rounded_image.dart';
 
 
 class CarouselSliderWidget extends StatelessWidget {
-  final List<String> banners;
+  final List<BannerModel> banners;
 
   const CarouselSliderWidget({super.key, required this.banners});
 
@@ -23,10 +25,10 @@ class CarouselSliderWidget extends StatelessWidget {
           context.read<CarouselBloc>().add(ChangeSliderEvent(newIndex: index));
         },
       ),
-      items: banners.map((bannerUrl) {
+      items: banners.map((banner) {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: AppSizes.defaultSpace.w / 2),
-          child: RoundedImage(imageUrl: bannerUrl),
+          child: RoundedImage(imageUrl: banner.imageUrl, isNetworkImage: true, onPressed: () => context.goNamed(banner.targetPage),),
         );
       }).toList(),
     );

@@ -43,6 +43,9 @@ class Routes {
   static const checkoutSuccess = '/check_out_success';
   static const order = '/order';
   static const subCategories= '/sub_categories';
+  static const allProducts = '/all_products';
+  static const allBrands = '/all_brands';
+  static const brandProducts = '/brand_products';
 
   ///Store Name
   static const homeName = 'home';
@@ -53,8 +56,9 @@ class Routes {
   static const checkoutSuccessName = 'check_out_success';
   static const orderName = 'order';
   static const subCategoriesName = 'sub_categories';
-
-
+  static const allProductsName = 'all_products';
+  static const allBrandsName = 'all_brands';
+  static const brandProductsName = 'brand_products';
 
 
 

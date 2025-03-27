@@ -37,7 +37,7 @@ class _UpdateFieldDialogState extends State<UpdateFieldDialog> {
         title = 'Cập nhật username';
         break;
       case 'profilePicture':
-        controller.text = widget.user.profilePicture ?? '';
+        controller.text = widget.user.profilePicture;
         hintText = 'Nhập URL ảnh đại diện (hoặc chọn ảnh)';
         title = 'Cập nhật ảnh đại diện';
         break;

@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile_sim_shop/core/router/app_router.dart';
+import 'package:mobile_sim_shop/features/store/data/models/brand_model.dart';
 
 import '../../helpers/helper_functions.dart';
+import '../../router/routes.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/enums.dart';
 import '../../utils/constants/image_strings.dart';
@@ -12,14 +16,15 @@ import '../images/circular_image.dart';
 import '../text/brand_title_text_icon.dart';
 
 class BrandCart extends StatelessWidget {
+  final BrandModel brand;
   const BrandCart({
-    super.key, required this.showBorder,
+    super.key, required this.showBorder, required this.brand,
   });
 final bool showBorder;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => context.pushNamed(Routes.brandProductsName, extra: brand),
       child: RoundedContainer(
         padding: EdgeInsets.all(AppSizes.sm.w),
         showBorder: showBorder,
@@ -30,8 +35,8 @@ final bool showBorder;
             SizedBox(
               width: 40, // Fixed width for the icon
               child: CircularImage(
-                image: AppImages.iconPhone,
-                isNetworkImage: false,
+                image: brand.image,
+                isNetworkImage: true,
                 backgroundColor: Colors.transparent,
                 overlayColor:
                 AppHelperFunctions.isDarkMode(
@@ -51,12 +56,12 @@ final bool showBorder;
                 CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const BrandTitleTextIcon(
-                    title: 'Apple',
+                  BrandTitleTextIcon(
+                    title: brand.name,
                     brandSizes: TextSizes.large,
                   ),
                   Text(
-                    '256 sản phẩm',
+                    '${brand.productsCount}',
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme

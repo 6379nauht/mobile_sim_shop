@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobile_sim_shop/features/store/data/models/brand_model.dart';
 
 import '../../helpers/helper_functions.dart';
 import '../../utils/constants/colors.dart';
@@ -9,8 +10,9 @@ import '../custom_shapes/containers/rounded_container.dart';
 import 'brand_cart.dart';
 
 class BrandShowCase extends StatelessWidget {
+  final BrandModel? brand;
   const BrandShowCase({
-    super.key, required this.images,
+    super.key, required this.images, required this.brand,
   });
   final List<String> images;
   @override
@@ -24,8 +26,10 @@ class BrandShowCase extends StatelessWidget {
       child: Column(
         children: [
           ///Brand  with Product
-          const BrandCart(
+          /// Brand with Product
+          BrandCart(
             showBorder: false,
+            brand: brand!,
           ),
 
           ///Brand 3 product Image
@@ -47,7 +51,7 @@ class BrandShowCase extends StatelessWidget {
           margin: EdgeInsets.only(right: AppSizes.sm.w),
           padding: EdgeInsets.all(AppSizes.md.r),
           child: Image(
-            image: AssetImage(image),
+            image: NetworkImage(image),
             fit: BoxFit.contain,
           ),
         ));

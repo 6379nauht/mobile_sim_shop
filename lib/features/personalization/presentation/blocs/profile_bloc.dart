@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_sim_shop/core/usecase/no_params.dart';
 import 'package:mobile_sim_shop/core/errors/failures.dart';
 import 'package:mobile_sim_shop/features/auth/data/models/user_model.dart';
-import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_event.dart';
 import 'package:mobile_sim_shop/features/personalization/data/models/update_user_params.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/delete_account_usecase.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_user_usecase.dart';
@@ -12,7 +11,6 @@ import 'package:mobile_sim_shop/features/personalization/presentation/blocs/prof
 import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../../auth/presentation/blocs/signin/signin_bloc.dart'; // Đảm bảo import dartz
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetCurrentUserUsecase _getCurrentUserUsecase;

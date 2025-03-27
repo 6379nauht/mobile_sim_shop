@@ -29,7 +29,7 @@ class FavouritePage extends StatelessWidget {
             padding: EdgeInsets.all(AppSizes.defaultSpace.r),
             child: Column(
               children: [
-                GridLayout(itemCount: 6, itemBuilder: (_, index) => const ProductCardVertical())
+                //GridLayout(itemCount: 6, itemBuilder: (_, index) => const ProductCardVertical())
               ],
             ),
         ),

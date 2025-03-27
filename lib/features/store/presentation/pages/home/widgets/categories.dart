@@ -7,7 +7,6 @@ import 'package:mobile_sim_shop/features/store/presentation/blocs/category/categ
 
 import '../../../../../../core/router/routes.dart';
 import '../../../../../../core/utils/constants/colors.dart';
-import '../../../../../../core/utils/constants/image_strings.dart';
 import '../../../../../../core/utils/constants/sizes.dart';
 import '../../../../../../core/widgets/image_text/vertical_image_text.dart';
 import '../../../../../../core/widgets/text/section_heading.dart';
@@ -64,7 +63,7 @@ class Categories extends StatelessWidget {
                    return VerticalImageText(
                      image: category.image,
                      title: category.name,
-                     onTap: () => context.pushNamed(Routes.subCategoriesName),
+                     onTap: () => context.pushNamed(Routes.subCategoriesName, extra: category),
                    );
                  },
                ),

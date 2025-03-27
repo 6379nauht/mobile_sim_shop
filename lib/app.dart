@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,10 +21,22 @@ import 'package:mobile_sim_shop/features/personalization/domain/usecases/delete_
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_user_usecase.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_event.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_brands_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_products_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_brand_by_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_with_details_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_variation_by_product_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/filter_products_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_banners_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_categories_usecase.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/banner/banner_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/banner/banner_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_event.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
 
 import 'core/utils/theme/app_theme.dart';
 import 'features/auth/presentation/blocs/signin/signin_event.dart';
@@ -83,19 +94,35 @@ class App extends StatelessWidget {
 
         ///Profile
         BlocProvider<ProfileBloc>(
-          create: (_) => ProfileBloc(
-            getIt<GetCurrentUserUsecase>(),
-            getIt<UpdateUserUsecase>(),
-            getIt<DeleteAccountUsecase>(),
-          )..add(LoadProfile())
-        ),
+            create: (_) => ProfileBloc(
+                  getIt<GetCurrentUserUsecase>(),
+                  getIt<UpdateUserUsecase>(),
+                  getIt<DeleteAccountUsecase>(),
+                )..add(LoadProfile())),
 
         ///Category
         BlocProvider<CategoryBloc>(
-          create: (_) => CategoryBloc(
-            getIt<GetAllCategoriesUsecase>()
-          )..add(LoadCategories())
-        )
+            create: (_) => CategoryBloc(getIt<GetAllCategoriesUsecase>())
+              ..add(LoadCategories())),
+
+        ///Banner
+        BlocProvider<BannerBloc>(
+            create: (_) =>
+                BannerBloc(getIt<GetAllBannersUsecase>())..add(LoadBanners())),
+
+        BlocProvider<ProductBloc>(
+            create: (_) => ProductBloc(
+                getIt<FetchAllProductsUsecase>(),
+                getIt<FetchProductByIdUsecase>(),
+                getIt<FetchAllBrandsUsecase>(),
+                getIt<FetchBrandByIdUsecase>(),
+                getIt<FetchProductWithDetailsUsecase>(),
+                getIt<FetchVariationByProductIdUsecase>(),
+                getIt<FilterProductsUsecase>()
+            )
+              ..add(FetchAllProducts())
+              ..add(FetchAllBrands())
+        ),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.router, // Sử dụng GoRouter

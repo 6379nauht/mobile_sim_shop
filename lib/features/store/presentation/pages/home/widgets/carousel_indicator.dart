@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_sim_shop/features/store/data/models/banner_model.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_event.dart';
 
@@ -7,7 +8,7 @@ import '../../../../../../core/utils/constants/colors.dart';
 import '../../../blocs/carousel_slider/carousel_slider_state.dart';
 
 class CarouselIndicatorWidget extends StatelessWidget {
-  final List<String> banners;
+  final List<BannerModel> banners;
 
   const CarouselIndicatorWidget({super.key, required this.banners});
 

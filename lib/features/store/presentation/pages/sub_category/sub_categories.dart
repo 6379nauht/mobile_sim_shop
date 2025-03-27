@@ -5,17 +5,19 @@ import 'package:mobile_sim_shop/core/utils/constants/sizes.dart';
 import 'package:mobile_sim_shop/core/widgets/appbar/appbar.dart';
 import 'package:mobile_sim_shop/core/widgets/products/product_cards/product_card_horizontal.dart';
 import 'package:mobile_sim_shop/core/widgets/text/section_heading.dart';
+import 'package:mobile_sim_shop/features/store/data/models/category_model.dart';
 
 import '../../../../../core/widgets/images/rounded_image.dart';
 
 class SubCategoriesPage extends StatelessWidget {
-  const SubCategoriesPage({super.key});
+  final CategoryModel category;
+  const SubCategoriesPage({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppAppBar(
-        title: Text('Điện Thoại'),
+      appBar: AppAppBar(
+        title: Text(category.name),
         showBackArrow: true,
       ),
       body: SingleChildScrollView(
@@ -24,10 +26,11 @@ class SubCategoriesPage extends StatelessWidget {
           child: Column(
             ///Banner
             children: [
-              const RoundedImage(
-                imageUrl: AppImages.banner1,
+              RoundedImage(
+                imageUrl: category.image,
                 width: double.infinity,
                 applyImageRadius: true,
+                isNetworkImage: true,
               ),
               SizedBox(
                 height: AppSizes.spaceBtwSections.h,
@@ -36,7 +39,7 @@ class SubCategoriesPage extends StatelessWidget {
               ///Sub_category
               Column(
                 children: [
-                  const SectionHeading(title: 'Apple', showActionButton: false,),
+                  SectionHeading(title: 'Apple', showActionButton: false,),
                   SizedBox(
                     height: AppSizes.spaceBtwItems.h / 2,
                   ),

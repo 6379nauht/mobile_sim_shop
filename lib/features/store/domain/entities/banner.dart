@@ -1,6 +1,6 @@
 class Banner {
   String imageUrl;
-  final bool targetPage;
+  final String targetPage;
   final bool active;
   Banner({
     required this.imageUrl,

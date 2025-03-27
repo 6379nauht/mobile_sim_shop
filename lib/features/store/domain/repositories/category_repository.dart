@@ -4,4 +4,5 @@ import 'package:mobile_sim_shop/features/store/data/models/category_model.dart';
 
 abstract class CategoryRepository {
   Future<Either<Failure, List<CategoryModel>>>getAllCategories();
+  Stream<Either<Failure, List<CategoryModel>>> fetchSubCategories(String parentId);
 }

@@ -10,6 +10,11 @@ import 'package:mobile_sim_shop/features/personalization/presentation/pages/addr
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/address/address.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/profile.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/settings/settings.dart';
+import 'package:mobile_sim_shop/features/store/data/models/category_model.dart';
+import 'package:mobile_sim_shop/features/store/data/models/product_model.dart';
+import 'package:mobile_sim_shop/features/store/presentation/pages/all_products/all_products.dart';
+import 'package:mobile_sim_shop/features/store/presentation/pages/brand/all_brands.dart';
+import 'package:mobile_sim_shop/features/store/presentation/pages/brand/brand_products.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/cart/cart.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/checkout/checkout.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/home/home.dart';
@@ -22,6 +27,7 @@ import 'package:mobile_sim_shop/features/store/presentation/pages/wishlist/wishl
 import '../../features/auth/presentation/pages/password_configuration/forget_password.dart';
 import '../../features/auth/presentation/pages/password_configuration/reset_password.dart';
 import '../../features/auth/presentation/pages/signup/verify_email.dart';
+import '../../features/store/data/models/brand_model.dart';
 import '../../navigation_menu.dart';
 import '../utils/constants/image_strings.dart';
 import '../utils/constants/text_strings.dart';
@@ -155,8 +161,12 @@ class AppRouter {
       GoRoute(
           path: Routes.productDetails,
           name: Routes.productDetailsName,
-          pageBuilder: (_, state) =>
-          const NoTransitionPage(child: ProductDetailsPage())),
+          pageBuilder: (_, state) {
+            final ProductModel product = state.extra as ProductModel? ?? ProductModel.empty();
+            return NoTransitionPage(child: ProductDetailsPage(product: product,));
+            }),
+
+
       GoRoute(
           path: Routes.cart,
           name: Routes.cartName,
@@ -182,15 +192,39 @@ class AppRouter {
       GoRoute(
           path: Routes.subCategories,
           name: Routes.subCategoriesName,
-          pageBuilder: (_, state) =>
-          const NoTransitionPage(child: SubCategoriesPage())),
+          pageBuilder: (_, state) {
+            final  CategoryModel category =
+                state.extra as CategoryModel? ?? CategoryModel.empty();
+            return NoTransitionPage(child: SubCategoriesPage(category: category));
+          }),
 
       GoRoute(
           path: Routes.order,
           name: Routes.orderName,
           pageBuilder: (_, state) =>
           const NoTransitionPage(child: OrderPage())),
-
+      GoRoute(
+          path: Routes.allProducts,
+          name: Routes.allProductsName,
+          pageBuilder: (_, state) {
+            final  CategoryModel category =
+            state.extra as CategoryModel? ?? CategoryModel.empty();
+            return NoTransitionPage(child: AllProductsPage(category: category));
+          }
+          ),
+      GoRoute(
+          path: Routes.allBrands,
+          name: Routes.allBrandsName,
+          pageBuilder: (_, state) =>
+          const NoTransitionPage(child: AllBrandsPage())),
+      GoRoute(
+          path: Routes.brandProducts,
+          name: Routes.brandProductsName,
+          pageBuilder: (_, state) {
+            final BrandModel brand = state.extra as BrandModel? ?? BrandModel.empty();
+            return NoTransitionPage(child: BrandProducts(brand: brand,));
+            }
+          ),
 
       ///BottomNavigation
       ShellRoute(
@@ -207,6 +241,7 @@ class AppRouter {
           ),
           GoRoute(
             path: Routes.store,
+            name: Routes.storeName,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: StorePage(),
             ),

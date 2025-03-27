@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mobile_sim_shop/core/utils/constants/sizes.dart';
 import 'package:mobile_sim_shop/core/widgets/text/section_heading.dart';
+import 'package:mobile_sim_shop/features/store/data/models/product_model.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/product_details/widgets/bottom_add_to_cart.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/product_details/widgets/product_attributes.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/product_details/widgets/product_image_slider.dart';
@@ -11,7 +12,8 @@ import 'package:mobile_sim_shop/features/store/presentation/pages/product_detail
 import 'package:readmore/readmore.dart';
 
 class ProductDetailsPage extends StatelessWidget {
-  const ProductDetailsPage({super.key});
+  final ProductModel product;
+  const ProductDetailsPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,8 @@ class ProductDetailsPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            /// 1- Product images slider
-            const ProductImageSlider(),
+            /// 1- Product imlider
+            ProductImageSlider(image: product.images ?? [],),
 
             /// 2 - Product Details
             Padding(
@@ -35,10 +37,10 @@ class ProductDetailsPage extends StatelessWidget {
                   const RatingAndShare(),
 
                   /// Price, title, stock and brand
-                  const ProductMetaData(),
+                  ProductMetaData(product: product,),
 
                   ///Attributes
-                  const ProductAttributes(),
+                  ProductAttributes(product: product,),
                   SizedBox(
                     height: AppSizes.spaceBtwSections.h,
                   ),
@@ -47,7 +49,7 @@ class ProductDetailsPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {}, child: const Text('Kiểm tra')),
+                        onPressed: () {}, child: const Text('Mua ngay')),
                   ),
                   SizedBox(
                     height: AppSizes.spaceBtwSections.h,

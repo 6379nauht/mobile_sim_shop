@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mobile_sim_shop/core/dependency_injection/locator.dart';
 import 'package:mobile_sim_shop/core/errors/failures.dart';
@@ -11,6 +10,11 @@ class CategoryRepositoryImpl implements CategoryRepository {
   @override
   Future<Either<Failure, List<CategoryModel>>> getAllCategories() async {
    return await _firebaseService.getAllCategories();
+  }
+
+  @override
+  Stream<Either<Failure, List<CategoryModel>>> fetchSubCategories(String parentId) {
+    return _firebaseService.fetchSubCategories(parentId);
   }
 
 }

@@ -1,5 +1,7 @@
 
 
+import 'package:intl/intl.dart';
+
 class AppValidator {
   static String? validateEmail(String? value) {
     if(value == null || value.isEmpty) {
@@ -48,6 +50,11 @@ class AppValidator {
     }
 
     return null;
+  }
+
+  static String formatPrice(double price) {
+    final format = NumberFormat.currency(locale: 'vi_VN', symbol: 'VND');
+    return format.format(price);
   }
 
 }

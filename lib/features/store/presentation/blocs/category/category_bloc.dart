@@ -14,7 +14,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   Future<void> _onLoadCategories(
       LoadCategories event, Emitter<CategoryState> emit) async {
-
     emit(state.copyWith(status: CategoryStatus.loading));
 
     // Gọi service để lấy danh sách categories
@@ -22,23 +21,19 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
     // Xử lý kết quả với fold từ dartz
     result.fold(
-          (failure) => emit(state.copyWith(
-        status: CategoryStatus.failure,
-        errorMessage: failure.message,
-      )),
-          (categories) {
-            // Lọc categories với điều kiện isFeatured = true và parentId = null
-            final filteredCategories = categories
-                .where((category) => category.isFeatured && category.parentId == null)
-                .toList();
+        (failure) => emit(state.copyWith(
+              status: CategoryStatus.failure,
+              errorMessage: failure.message,
+            )), (categories) {
+      // Lọc categories với điều kiện isFeatured = true và parentId = null
+      final filteredCategories = categories
+          .where((category) => category.isFeatured && category.parentId == null)
+          .toList();
 
-            emit(state.copyWith(
-              status: CategoryStatus.success,
-              categories: filteredCategories,
-            ));
-          }
-
-
-    );
+      emit(state.copyWith(
+        status: CategoryStatus.success,
+        categories: filteredCategories,
+      ));
+    });
   }
 }

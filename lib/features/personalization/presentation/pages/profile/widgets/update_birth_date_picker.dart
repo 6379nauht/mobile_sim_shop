@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile_sim_shop/features/auth/data/models/user_model.dart';
 import '../../../blocs/profile_bloc.dart';
 import '../../../blocs/profile_event.dart';
+
 class UpdateBirthDatePicker extends StatelessWidget {
   final UserModel user;
 
@@ -11,25 +12,42 @@ class UpdateBirthDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime initialDate = DateTime.now();
-    if (user.birthDate != null) {
-      try {
-        initialDate = DateFormat('dd MMM, yyyy').parse(user.birthDate!);
-      } catch (_) {}
-    }
+    DateTime initialDate = _parseInitialDate(user.birthDate);
 
-    return Builder(
-      builder: (context) => Container(), // Widget này chỉ để gọi showDatePicker
+    return ElevatedButton(
+      onPressed: () async {
+        final pickedDate = await showDatePicker(
+          context: context,
+          initialDate: initialDate,
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+        );
+        if (pickedDate != null) {
+          final formattedDate = DateFormat('dd MMM, yyyy').format(pickedDate);
+          final updatedUser = user.copyWith(birthDate: formattedDate);
+          context.read<ProfileBloc>().add(UpdateProfile(user: updatedUser, imageFile: null));
+        }
+      },
+      child: const Text('Update Birth Date'),
     );
   }
 
-  static void show(BuildContext context, UserModel user) {
+  // Hàm phụ để tính initialDate
+  DateTime _parseInitialDate(String? birthDate) {
     DateTime initialDate = DateTime.now();
-    if (user.birthDate != null) {
+    if (birthDate != null) {
       try {
-        initialDate = DateFormat('dd MMM, yyyy').parse(user.birthDate!);
-      } catch (_) {}
+        initialDate = DateFormat('dd MMM, yyyy').parse(birthDate);
+      } catch (e) {
+        print('Error parsing birth date: $e');
+      }
     }
+    return initialDate;
+  }
+
+  // Phương thức tĩnh (nếu vẫn cần dùng ở nơi khác)
+  static void show(BuildContext context, UserModel user) {
+    final initialDate = UpdateBirthDatePicker(user: user)._parseInitialDate(user.birthDate);
 
     showDatePicker(
       context: context,

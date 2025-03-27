@@ -13,17 +13,21 @@ class BannerFirebaseServiceImpl implements BannerFirebaseService {
   @override
   Future<Either<Failure, List<BannerModel>>> getAllBanner() async {
     try {
-      final querySnapshot = await getIt<FirebaseFirestore>().collection('banners').get();
+      final querySnapshot = await getIt<FirebaseFirestore>()
+          .collection('banners')
+          .where('active', isEqualTo: true)
+          .get();
 
-      final banners = querySnapshot.docs.map((doc) => BannerModel.fromSnapshot(doc)).toList();
+      final banners = querySnapshot.docs
+          .map((doc) => BannerModel.fromSnapshot(doc))
+          .toList();
 
       return Right(banners);
-    } on FirebaseException catch(e) {
+    } on FirebaseException catch (e) {
       return Left(ServerFailure('lỗi firebase firestore ${e.message}'));
     } on Exception catch (e) {
       // Xử lý lỗi chung
       return Left(ServerFailure('Đã xảy ra lỗi: $e'));
     }
   }
-
 }
