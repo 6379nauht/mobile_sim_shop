@@ -1,5 +1,6 @@
 import 'package:mobile_sim_shop/core/utils/formatter/formatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mobile_sim_shop/features/personalization/data/models/address_model.dart';
 import '../../domain/entities/user.dart';
 
 class UserModel extends User {
@@ -15,7 +16,7 @@ class UserModel extends User {
     super.emailVerified = false,
     super.gender,
     super.birthDate,
-    super.deleteHash
+    super.deleteHash,
   });
 
   // Helper func to get the full name
@@ -82,7 +83,8 @@ class UserModel extends User {
       emailVerified: data['emailVerified'] ?? false,
       gender: data['gender'],
       birthDate: data['birthDate'],
-      deleteHash: data['deleteHash'], // Lấy deleteHash từ Firesto
+      deleteHash: data['deleteHash'],
+      // Lấy deleteHash từ Firesto
     );
   }
 

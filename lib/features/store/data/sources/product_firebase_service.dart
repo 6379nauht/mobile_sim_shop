@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:get_it/get_it.dart';
-
+import 'package:rxdart/rxdart.dart';
 import '../../../../core/dependency_injection/locator.dart';
 import '../../../../core/errors/failures.dart';
 import '../models/brand_model.dart';
@@ -16,8 +15,8 @@ abstract class ProductFirebaseService {
   Stream<Either<Failure, BrandModel?>> fetchBrandById(String brandId);
 
   Stream<Either<Failure, List<ProductVariationModel>>> fetchVariationByProductId(String productId);
-  Stream<Either<Failure, ProductModel?>> fetchProductWithDetails(String productId);
   Stream<Either<Failure, List<ProductModel>>> filterProducts(String filterOption);
+  Stream<Either<Failure, List<ProductModel>>> fetchProductsByCategoryId(String categoryId);
 }
 
 class ProductFirebaseServiceImpl implements ProductFirebaseService{
@@ -138,116 +137,193 @@ class ProductFirebaseServiceImpl implements ProductFirebaseService{
     return stream;
   }
 
-  @override
-  Stream<Either<Failure, ProductModel?>> fetchProductWithDetails(String productId) {
-    final firestore = getIt<FirebaseFirestore>();
-    // Stream cho product
-    return firestore
-        .collection('products')
-        .doc(productId)
-        .snapshots()
-        .asyncMap((productSnapshot) async {
-      try {
-        if (!productSnapshot.exists) {
-          return const Right<Failure, ProductModel?>(null);
-        }
-        ProductModel product = ProductModel.fromSnapshot(productSnapshot);
 
-        // Lấy brand nếu có brandId
-        if (product.brand?.id != null) {
-          final brandEither = await fetchBrandById(product.brand!.id).first;
-          brandEither.fold(
-                (failure) => throw Exception(failure.message),
-                (brand) {
-              if (brand != null) {
-                product = ProductModel(
-                  id: product.id,
-                  title: product.title,
-                  stock: product.stock,
-                  price: product.price,
-                  thumbnail: product.thumbnail,
-                  productType: product.productType,
-                  sku: product.sku,
-                  brandId: brand.id,
-                  date: product.date,
-                  salePrice: product.salePrice,
-                  isFeatured: product.isFeatured,
-                  categoryId: product.categoryId,
-                  description: product.description,
-                  images: product.images,
-                  productAttributes: product.productAttributes,
-                );
-              }
+  @override
+  Stream<Either<Failure, List<ProductModel>>> filterProducts(String filterOption) async* {
+    try {
+      final parts = filterOption.split('|');
+      final categoryId = parts.isNotEmpty && parts[0].isNotEmpty ? parts[0] : 'All';
+      final brandId = parts.length > 1 && parts[1].isNotEmpty ? parts[1] : 'All';
+      final sortOption = parts.length > 2 && parts[2].isNotEmpty ? parts[2] : 'Name';
+
+      List<String> allCategoryIds = [];
+      if (categoryId != 'All') {
+        // Lấy danh sách danh mục con
+        final subcategoryIds = await _fetchSubcategoryIdsSafely(categoryId);
+        allCategoryIds = [categoryId, ...subcategoryIds];
+        print('All Category IDs for filter: $allCategoryIds');
+      }
+
+      // Tạo các Stream cho từng categoryId (nếu có) hoặc truy vấn chung
+      final productStreams = categoryId == 'All'
+          ? [
+        _buildQuery(
+          getIt<FirebaseFirestore>().collection('products'),
+          brandId,
+          sortOption,
+        ).snapshots().map((snapshot) => _mapSnapshotToProducts(snapshot, 'All')),
+      ]
+          : allCategoryIds.map((id) {
+        Query query = getIt<FirebaseFirestore>()
+            .collection('products')
+            .where('categoryId', isEqualTo: id);
+        return _buildQuery(query, brandId, sortOption)
+            .snapshots()
+            .map((snapshot) => _mapSnapshotToProducts(snapshot, id));
+      }).toList();
+
+      // Gộp các Stream bằng Rx.combineLatestList
+      await for (final List<Either<Failure, List<ProductModel>>> combinedResults
+      in Rx.combineLatestList(productStreams)) {
+        final collectedProducts = <ProductModel>[];
+        for (final eitherProducts in combinedResults) {
+          eitherProducts.fold(
+                (failure) => print('Filter stream failure: $failure'),
+                (products) {
+              print('Products in this stream: ${products.length}');
+              collectedProducts.addAll(products);
             },
           );
         }
 
-        // Lấy variations (chỉ để log)
-        final variationsEither = await fetchVariationByProductId(productId).first;
-        variationsEither.fold(
-              (failure) => throw Exception(failure.message),
-              (variations) {
-            print('Variations for $productId: ${variations.length} found');
-          },
-        );
-
-        return Right<Failure, ProductModel?>(product);
-      } catch (e) {
-        return Left<Failure, ProductModel?>(ServerFailure('Error streaming product details: $e'));
+        print('Total filtered products: ${collectedProducts.length}');
+        if (collectedProducts.isNotEmpty) {
+          yield Right<Failure, List<ProductModel>>(collectedProducts);
+        } else {
+          yield Left<Failure, List<ProductModel>>(
+              ServerFailure('No products found for filter $filterOption'));
+        }
       }
-    })
-        .handleError((e) {
-      return Left<Failure, ProductModel?>(ServerFailure('Stream error: $e'));
-    });
+    } catch (e) {
+      print('Error in filterProducts: $e');
+      yield Left<Failure, List<ProductModel>>(
+          ServerFailure('Error filtering products: $e'));
+    }
   }
 
-  @override
-  Stream<Either<Failure, List<ProductModel>>> filterProducts(String filterOption) {
-    Query query = getIt<FirebaseFirestore>().collection('products');
-    final parts = filterOption.split('|');
-
-    // Đảm bảo parts đủ dài và xử lý giá trị mặc định
-    final categoryId = parts.isNotEmpty && parts[0].isNotEmpty ? parts[0] : 'All';
-    final brandId = parts.length > 1 && parts[1].isNotEmpty ? parts[1] : 'All';
-    final sortOption = parts.length > 2 && parts[2].isNotEmpty ? parts[2] : 'Name';
-
-    if (categoryId != 'All') {
-      query = query.where('categoryId', isEqualTo: categoryId);
-    }
+  Query _buildQuery(Query query, String brandId, String sortOption) {
     if (brandId != 'All') {
       query = query.where('brandId', isEqualTo: brandId);
     }
+
+    // Áp dụng orderBy dựa trên sortOption
     switch (sortOption) {
       case 'Name':
-        query = query.orderBy('title');
+        query = query.orderBy('title', descending: false);
         break;
       case 'Higher Price':
         query = query.orderBy('price', descending: true);
         break;
       case 'Lower Price':
-        query = query.orderBy('price');
+        query = query.orderBy('price', descending: false);
         break;
       case 'Sale':
-        query = query.where('salePrice', isGreaterThan: 0).orderBy('salePrice');
+      // Không dùng where('salePrice', isGreaterThan: 0) để khớp chỉ mục hiện tại
+        query = query.orderBy('salePrice', descending: false);
         break;
       case 'Newest':
         query = query.orderBy('date', descending: true);
         break;
       default:
-        query = query.orderBy('title');
+        query = query.orderBy('title', descending: false);
     }
-    return query.snapshots().map(
-          (snapshot) {
-        try {
-          final products = snapshot.docs
-              .map((doc) => ProductModel.fromSnapshot(doc))
-              .toList();
-          print('Firestore products: ${products.length}'); // Debug
-          return Right(products);
-        } catch (e) {
-          return Left(ServerFailure('Failed to filter products: $e'));
+    return query;
+  }
+
+
+
+
+
+
+  @override
+  Stream<Either<Failure, List<ProductModel>>> fetchProductsByCategoryId(String categoryId) async* {
+    try {
+      print('Fetching products for categoryId: $categoryId');
+
+      final subcategoryIds = await _fetchSubcategoryIdsSafely(categoryId);
+      print('Subcategory IDs: $subcategoryIds');
+
+      final allCategoryIds = [categoryId, ...subcategoryIds];
+      print('All Category IDs: $allCategoryIds');
+
+      final productStreams = allCategoryIds.map((id) {
+        print('Querying products for ID: $id');
+        return getIt<FirebaseFirestore>()
+            .collection('products')
+            .where('categoryId', isEqualTo: id)
+            .snapshots()
+            .map((snapshot) {
+          print('Snapshot docs count for $id: ${snapshot.docs.length}');
+          return _mapSnapshotToProducts(snapshot, id);
+        });
+      }).toList();
+
+      // Sử dụng Rx.combineLatest để gộp tất cả Stream
+      await for (final List<Either<Failure, List<ProductModel>>> combinedResults
+      in Rx.combineLatestList(productStreams)) {
+        final collectedProducts = <ProductModel>[];
+        for (final eitherProducts in combinedResults) {
+          eitherProducts.fold(
+                (failure) => print('Stream failure: $failure'),
+                (products) {
+              print('Products in this stream: ${products.length}');
+              collectedProducts.addAll(products);
+            },
+          );
         }
-      },
-    );
+
+        print('Total collected products: ${collectedProducts.length}');
+        if (collectedProducts.isNotEmpty) {
+          yield Right<Failure, List<ProductModel>>(collectedProducts);
+        } else {
+          yield Left<Failure, List<ProductModel>>(
+              ServerFailure('No products found for category $categoryId'));
+        }
+      }
+    } catch (e) {
+      print('Error in fetchProductsByCategoryId: $e');
+      yield Left<Failure, List<ProductModel>>(
+          ServerFailure('Error fetching products for category $categoryId: $e'));
+    }
+  }
+
+  Future<List<String>> _fetchSubcategoryIdsSafely(String categoryId) async {
+    try {
+      final snapshot = await getIt<FirebaseFirestore>()
+          .collection('categories')
+          .where('parentId', isEqualTo: categoryId)
+          .get();
+
+      print('Subcategory snapshot docs: ${snapshot.docs.length}');
+      final subcategoryIds = snapshot.docs.map((doc) {
+        print('Subcategory doc ID: ${doc.id}, Data: ${doc.data()}');
+        return doc.id;
+      }).toList();
+
+      return subcategoryIds;
+    } on FirebaseException catch (e) {
+      print('Firebase error fetching subcategories: ${e.code} - ${e.message}');
+      return [];
+    } catch (e) {
+      print('Unexpected error fetching subcategories: $e');
+      return [];
+    }
+  }
+
+  Either<Failure, List<ProductModel>> _mapSnapshotToProducts(
+      QuerySnapshot snapshot, String categoryId) {
+    try {
+      final products = snapshot.docs.map((doc) {
+        print('Product doc ID: ${doc.id}, Data: ${doc.data()}');
+        return ProductModel.fromSnapshot(doc);
+      }).toList();
+
+      print('Mapped products count: ${products.length}');
+      return Right<Failure, List<ProductModel>>(products);
+    } catch (e) {
+      print('Error mapping products for categoryId $categoryId: $e');
+      return Left<Failure, List<ProductModel>>(
+          ServerFailure('Error processing products for category $categoryId: $e'));
+    }
   }
 }

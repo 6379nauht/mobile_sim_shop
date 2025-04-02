@@ -1,3 +1,6 @@
+import 'package:mobile_sim_shop/features/personalization/data/models/address_model.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/entities/address.dart';
+
 class User {
   final String id;
   String firstName;
@@ -10,7 +13,7 @@ class User {
   final bool emailVerified;
   String? gender;
   String? birthDate;
-  final String? deleteHash; // Thêm deleteHash
+  final String? deleteHash;
   User( {
     required this.id,
     required this.firstName,
@@ -23,6 +26,6 @@ class User {
     required this.emailVerified,
     this.gender,
     this.birthDate,
-    this.deleteHash,
+    this.deleteHash
   });
 }

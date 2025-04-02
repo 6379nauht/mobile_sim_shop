@@ -40,13 +40,14 @@ class ProductRepositoryImpl implements ProductRepository{
     return _firebaseService.fetchVariationByProductId(productId);
   }
 
-  @override
-  Stream<Either<Failure, ProductModel?>> fetchProductWithDetails(String productId) {
-    return _firebaseService.fetchProductWithDetails(productId);
-  }
 
   @override
   Stream<Either<Failure, List<ProductModel>>> filterProducts(String filterOption) {
     return _firebaseService.filterProducts(filterOption);
+  }
+
+  @override
+  Stream<Either<Failure, List<ProductModel>>> fetchProductsByCategoryId(String categoryId) {
+    return _firebaseService.fetchProductsByCategoryId(categoryId);
   }
 }

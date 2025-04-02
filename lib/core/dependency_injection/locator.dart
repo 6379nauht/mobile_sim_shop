@@ -17,29 +17,42 @@ import 'package:mobile_sim_shop/features/auth/domain/usecases/signin_usecase.dar
 import 'package:mobile_sim_shop/features/auth/domain/usecases/signin_with_google_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/signout_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/data/repositories/address_repository_impl.dart';
 import 'package:mobile_sim_shop/features/personalization/data/repositories/profile_repository_impl.dart';
+import 'package:mobile_sim_shop/features/personalization/data/sources/address_firebase_service.dart';
 import 'package:mobile_sim_shop/features/personalization/data/sources/profile_firebase_service.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/repositories/address_repository.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/repositories/profile_repository.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/delete_account_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/fetch_adddresss_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/remove_address_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/save_address_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_address_usecase.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_user_usecase.dart';
+import 'package:mobile_sim_shop/features/store/data/local_sources/wishlist_local_service.dart';
 import 'package:mobile_sim_shop/features/store/data/repositories/banner_repository_impl.dart';
 import 'package:mobile_sim_shop/features/store/data/repositories/category_repository_impl.dart';
 import 'package:mobile_sim_shop/features/store/data/repositories/product_repository_impl.dart';
+import 'package:mobile_sim_shop/features/store/data/repositories/wishlist_repository_impl.dart';
 import 'package:mobile_sim_shop/features/store/data/sources/banner_firebase_service.dart';
 import 'package:mobile_sim_shop/features/store/data/sources/category_firebase_service.dart';
 import 'package:mobile_sim_shop/features/store/data/sources/product_firebase_service.dart';
 import 'package:mobile_sim_shop/features/store/domain/repositories/category_repository.dart';
 import 'package:mobile_sim_shop/features/store/domain/repositories/product_repository.dart';
+import 'package:mobile_sim_shop/features/store/domain/repositories/wishlist_repository.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_brands_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_brand_by_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_id_usecase.dart';
-import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_with_details_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_subcategories_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_variation_by_product_id_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/filter_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_banners_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_categories_usecase.dart';
-import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/get_wishlist_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/remove_wishlist_item_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/save_wishlist_item_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/personalization/data/sources/imgur_data_source.dart';
 import '../../features/store/domain/repositories/banner_repository.dart';
@@ -67,6 +80,8 @@ Future<void> setupLocator() async {
   getIt.registerSingleton<CategoryFirebaseService>(CategoryFirebaseServiceImpl());
   getIt.registerSingleton<BannerFirebaseService>(BannerFirebaseServiceImpl());
   getIt.registerSingleton<ProductFirebaseService>(ProductFirebaseServiceImpl());
+  getIt.registerSingleton<WishlistLocalService>(WishlistLocalServiceImpl(prefs));
+  getIt.registerSingleton<AddressFirebaseService>(AddressFirebaseServiceImpl());
 
   /// Repository
   getIt.registerSingleton<AuthRepository>(AuthRepositoryImpl());
@@ -84,6 +99,8 @@ Future<void> setupLocator() async {
   getIt.registerSingleton<BannerRepository>(BannerRepositoryImpl());
   ///ProductRepository
   getIt.registerSingleton<ProductRepository>(ProductRepositoryImpl());
+  getIt.registerSingleton<WishlistRepository>(WishlistRepositoryImpl());
+  getIt.registerSingleton<AddressRepository>(AddressRepositoryImpl());
 
   /// Usecase
   getIt.registerSingleton<SignupUseCase>(SignupUseCase());
@@ -107,7 +124,15 @@ Future<void> setupLocator() async {
   getIt.registerSingleton<FetchAllProductsUsecase>(FetchAllProductsUsecase());
   getIt.registerSingleton<FetchProductByIdUsecase>(FetchProductByIdUsecase());
   getIt.registerSingleton<FetchBrandByIdUsecase>(FetchBrandByIdUsecase());
-  getIt.registerSingleton<FetchProductWithDetailsUsecase>(FetchProductWithDetailsUsecase());
   getIt.registerSingleton<FetchVariationByProductIdUsecase>(FetchVariationByProductIdUsecase());
   getIt.registerSingleton<FilterProductsUsecase>(FilterProductsUsecase());
+  getIt.registerSingleton<FetchSubCategoriesUsecase>(FetchSubCategoriesUsecase());
+  getIt.registerSingleton<FetchProductByCategoryIdUsecase>(FetchProductByCategoryIdUsecase());
+  getIt.registerSingleton<GetWishListUsecase>(GetWishListUsecase());
+  getIt.registerSingleton<RemoveWishlistItemUsecase>(RemoveWishlistItemUsecase());
+  getIt.registerSingleton<SaveWishlistItemUsecase>(SaveWishlistItemUsecase());
+  getIt.registerSingleton<SaveAddressUsecase>(SaveAddressUsecase());
+  getIt.registerSingleton<RemoveAddressUsecase>(RemoveAddressUsecase());
+  getIt.registerSingleton<UpdateAddressUsecase>(UpdateAddressUsecase());
+  getIt.registerSingleton<FetchAddressUsecase>(FetchAddressUsecase());
 }

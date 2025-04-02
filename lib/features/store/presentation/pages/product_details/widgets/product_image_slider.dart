@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mobile_sim_shop/core/helpers/helper_functions.dart';
@@ -9,11 +10,16 @@ import 'package:mobile_sim_shop/core/widgets/appbar/appbar.dart';
 import 'package:mobile_sim_shop/core/widgets/custom_shapes/curved_edges/curved_edges_widget.dart';
 import 'package:mobile_sim_shop/core/widgets/icons/circular_icon.dart';
 import 'package:mobile_sim_shop/core/widgets/images/rounded_image.dart';
+import 'package:mobile_sim_shop/features/store/data/models/product_model.dart';
+
+import '../../../blocs/wishlist/wishlist_bloc.dart';
+import '../../../blocs/wishlist/wishlist_event.dart';
+import '../../../blocs/wishlist/wishlist_state.dart';
 
 class ProductImageSlider extends StatefulWidget {
   final List<String> image;
-
-  const ProductImageSlider({super.key, required this.image});
+  final ProductModel product;
+  const ProductImageSlider({super.key, required this.image, required this.product});
 
   @override
   State<ProductImageSlider> createState() => _ProductImageSliderState();
@@ -91,10 +97,32 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
             ),
 
             /// AppBar Icons
-            const AppAppBar(
+            AppAppBar(
               showBackArrow: true,
               actions: [
-                CircularIcon(icon: Iconsax.heart5, iconColor: Colors.red),
+                BlocBuilder<WishlistBloc, WishlistState>(
+                  builder: (context, state) {
+                    final isInWishlist = state.wishlist.contains(widget.product.id);
+                    final isLoading = state.status == WishlistStatus.loading;
+                    return CircularIcon(
+                      icon: isLoading
+                          ? Iconsax.activity // Biểu tượng loading
+                          : isInWishlist
+                          ? Iconsax.heart5
+                          : Iconsax.heart,
+                      iconColor: isInWishlist ? Colors.red : null,
+                      onPressed: isLoading
+                          ? null // Vô hiệu hóa khi đang tải
+                          : () {
+                        if (isInWishlist) {
+                          context.read<WishlistBloc>().add(RemoveFromWishlist(widget.product.id));
+                        } else {
+                          context.read<WishlistBloc>().add(AddToWishlist(widget.product.id));
+                        }
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ],

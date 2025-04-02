@@ -10,14 +10,14 @@ import 'package:mobile_sim_shop/core/widgets/appbar/appbar.dart';
 import 'package:mobile_sim_shop/core/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:mobile_sim_shop/core/widgets/list_tiles/settings_menu_tile.dart';
 import 'package:mobile_sim_shop/core/widgets/text/section_heading.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_bloc.dart';
 
 import '../../../../../core/utils/constants/colors.dart';
 import '../../../../../core/utils/constants/sizes.dart';
 import '../../../../auth/presentation/blocs/signin/signin_bloc.dart';
 import '../../../../auth/presentation/blocs/signin/signin_event.dart';
 import '../../../../auth/presentation/blocs/signin/signin_state.dart';
+import '../../blocs/profile/profile_state.dart';
 import '../../widgets/user_profile_tile.dart';
 
 class SettingsPage extends StatelessWidget {

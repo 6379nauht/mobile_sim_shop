@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_sim_shop/features/auth/data/models/user_model.dart';
-import '../../../blocs/profile_bloc.dart';
-import '../../../blocs/profile_event.dart';
+import '../../../blocs/profile/profile_bloc.dart';
+import '../../../blocs/profile/profile_event.dart';
 
 class UpdateBirthDatePicker extends StatelessWidget {
   final UserModel user;

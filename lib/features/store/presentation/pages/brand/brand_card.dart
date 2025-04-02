@@ -11,7 +11,8 @@ import 'package:mobile_sim_shop/core/widgets/text/brand_title_text_icon.dart';
 import 'package:mobile_sim_shop/features/store/data/models/brand_model.dart';
 
 class AppBrandCard extends StatelessWidget {
-  const AppBrandCard({super.key, required this.showBorder, this.onTap, required this.brand});
+  const AppBrandCard(
+      {super.key, required this.showBorder, this.onTap, required this.brand});
   final bool showBorder;
   final BrandModel brand;
   final void Function()? onTap;
@@ -34,15 +35,18 @@ class AppBrandCard extends StatelessWidget {
                   ? AppColors.white
                   : AppColors.black,
             )),
-
-            SizedBox(width: AppSizes.spaceBtwItems.w / 2,),
-
-            Expanded(child: Column(
+            SizedBox(
+              width: AppSizes.spaceBtwItems.w / 2,
+            ),
+            Expanded(
+                child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BrandTitleTextIcon(title: brand.name, brandSizes: TextSizes.large,),
-
+                BrandTitleTextIcon(
+                  title: brand.name,
+                  brandSizes: TextSizes.large,
+                ),
                 Text(
                   '${brand.productsCount} sản phẩm',
                   overflow: TextOverflow.ellipsis,

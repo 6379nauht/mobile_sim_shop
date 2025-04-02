@@ -35,7 +35,7 @@ class CircularImage extends StatelessWidget {
     shape: BoxShape.circle),
       child: Image(
         fit: fit,
-        image: isNetworkImage ?NetworkImage(image) : AssetImage(image) as ImageProvider,
+        image: isNetworkImage ? NetworkImage(image) : AssetImage(image) as ImageProvider,
         color: overlayColor,
       ),
     );

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_sim_shop/core/router/routes.dart';
+import 'package:mobile_sim_shop/core/widgets/address/address_form.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_bloc.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_state.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/pages/signin/signin.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/pages/signup/signup.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/pages/address/add_address.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/address/address.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/profile.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/settings/settings.dart';
@@ -27,6 +27,7 @@ import 'package:mobile_sim_shop/features/store/presentation/pages/wishlist/wishl
 import '../../features/auth/presentation/pages/password_configuration/forget_password.dart';
 import '../../features/auth/presentation/pages/password_configuration/reset_password.dart';
 import '../../features/auth/presentation/pages/signup/verify_email.dart';
+import '../../features/personalization/data/models/address_model.dart';
 import '../../features/store/data/models/brand_model.dart';
 import '../../navigation_menu.dart';
 import '../utils/constants/image_strings.dart';
@@ -153,9 +154,25 @@ class AppRouter {
       GoRoute(
           path: Routes.addNewAddress,
           name: Routes.addNewAddressName,
-          pageBuilder: (_, state) =>
-          const NoTransitionPage(child: AddAddressPage())),
+          pageBuilder: (_, state) {
+            final userId = state.extra as String? ?? '';
+            return NoTransitionPage(child: AddressFormPage(userId: userId,));
+          }),
 
+      GoRoute(
+        path: Routes.editAddress,
+        name: Routes.editAddressName,
+        pageBuilder: (_, state) {
+          final args = state.extra as Map<String, dynamic>?;
+          return NoTransitionPage(
+            child: AddressFormPage(
+              userId: args?['userId'] ?? '',
+              address: args?['address'] as AddressModel?, // Ép kiểu thành AddressModel
+              isEditMode: true, // Luôn là edit mode
+            ),
+          );
+        },
+      ),
 
       ///Store
       GoRoute(

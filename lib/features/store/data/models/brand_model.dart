@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mobile_sim_shop/core/utils/constants/image_strings.dart';
 import 'package:mobile_sim_shop/features/store/domain/entities/brand.dart';
 
 class BrandModel extends Brand {
@@ -10,7 +11,7 @@ class BrandModel extends Brand {
     super.productsCount,
   });
 
-  static BrandModel empty() => BrandModel(id: '', name: '', image: '');
+  static BrandModel empty() => BrandModel(id: '', name: '', image: AppImages.iphone13prm);
 
   Map<String, dynamic> toJson() {
     return {

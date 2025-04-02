@@ -61,7 +61,7 @@ final bool showBorder;
                     brandSizes: TextSizes.large,
                   ),
                   Text(
-                    '${brand.productsCount}',
+                    '${brand.productsCount} sản phẩm',
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme

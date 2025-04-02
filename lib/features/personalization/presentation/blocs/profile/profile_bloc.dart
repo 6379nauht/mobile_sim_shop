@@ -7,9 +7,10 @@ import 'package:mobile_sim_shop/features/personalization/data/models/update_user
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/delete_account_usecase.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_user_usecase.dart';
 import 'package:mobile_sim_shop/features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_event.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
+
 import 'package:dartz/dartz.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_event.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_state.dart';
 
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {

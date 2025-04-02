@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_sim_shop/core/router/routes.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_event.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_bloc.dart';
 
 import '../../../../../auth/presentation/blocs/signin/signin_bloc.dart';
 import '../../../../../auth/presentation/blocs/signin/signin_event.dart';
+import '../../../blocs/profile/profile_event.dart';
+import '../../../blocs/profile/profile_state.dart';
 
 class DeleteConfirmationDialog extends StatefulWidget {
   const DeleteConfirmationDialog({super.key});

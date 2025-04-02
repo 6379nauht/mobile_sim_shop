@@ -4,9 +4,9 @@ import 'package:mobile_sim_shop/features/store/domain/repositories/product_repos
 
 import '../../../../core/dependency_injection/locator.dart';
 
-class FetchProductWithDetailsUsecase implements UsecaseStream<Either, String>{
+class FetchProductByCategoryIdUsecase extends UsecaseStream<Either, String>{
   @override
   Stream<Either> call({String? params}) {
-    return getIt<ProductRepository>().fetchProductWithDetails(params!);
+    return getIt<ProductRepository>().fetchProductsByCategoryId(params!);
   }
 }

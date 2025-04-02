@@ -25,12 +25,13 @@ class Routes {
   static const profile = '/profile';
   static const address = '/address';
   static const addNewAddress = '/add_new_address';
+  static const editAddress = '/edit_address';
 
   ///Personalization Name
   static const profileName = 'profile';
   static const addressName = 'address';
   static const addNewAddressName = 'add_new_address';
-
+  static const editAddressName = 'edit_address';
 
 
   ///Store Path

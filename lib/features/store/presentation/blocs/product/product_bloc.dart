@@ -9,38 +9,40 @@ import 'package:mobile_sim_shop/features/store/data/models/product_model.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_brands_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_brand_by_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_id_usecase.dart';
-import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_with_details_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_variation_by_product_id_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/filter_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_state.dart';
+
+import '../../../../../core/utils/constants/image_strings.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final FetchAllProductsUsecase _fetchAllProductsUsecase;
   final FetchProductByIdUsecase _fetchProductByIdUsecase;
   final FetchAllBrandsUsecase _fetchAllBrandsUsecase;
   final FetchBrandByIdUsecase _fetchBrandByIdUsecase;
-  final FetchProductWithDetailsUsecase _fetchProductWithDetailsUsecase;
   final FetchVariationByProductIdUsecase _fetchVariationByProductIdUsecase;
   final FilterProductsUsecase _filterProductsUsecase;
+  final FetchProductByCategoryIdUsecase _fetchProductByCategoryIdUsecase;
   ProductBloc(
       this._fetchAllProductsUsecase,
       this._fetchProductByIdUsecase,
       this._fetchAllBrandsUsecase,
       this._fetchBrandByIdUsecase,
-      this._fetchProductWithDetailsUsecase,
       this._fetchVariationByProductIdUsecase,
-      this._filterProductsUsecase)
+      this._filterProductsUsecase,
+      this._fetchProductByCategoryIdUsecase)
       : super(const ProductState()) {
     on<FetchAllProducts>(_onFetchAllProducts);
     on<FetchProductById>(_onFetchProductById);
     on<FetchAllBrands>(_onFetchAllBrands);
     on<FetchBrandById>(_onFetchBrandById);
     on<FetchVariationsByProductId>(_onFetchVariationsByProductId);
-    on<FetchProductWithDetails>(_onFetchProductWithDetails);
     on<FilterProducts>(_onFilterProducts);
-
+    on<FetchProductByCategoryId>(_onFetchProductByCategoryId);
+    on<ResetProductState>(_onResetProductState);
   }
 
   Future<void> _onFetchAllProducts(
@@ -143,36 +145,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
   }
 
-  Future<void> _onFetchProductWithDetails(
-      FetchProductWithDetails event, Emitter<ProductState> emit) async {
-    emit(state.copyWith(status: ProductStatus.loading));
-    try {
-      await for (final either
-          in _fetchProductWithDetailsUsecase.call(params: event.productId)) {
-        either.fold(
-          (failure) => emit(state.copyWith(
-              status: ProductStatus.failure, errorMessage: failure.message)),
-          (product) => emit(
-              state.copyWith(status: ProductStatus.success, product: product)),
-        );
-      }
-    } catch (e) {
-      emit(state.copyWith(
-          status: ProductStatus.failure,
-          errorMessage: 'Lỗi: fetch product details'));
-    }
-  }
 
   Future<void> _onFilterProducts(
       FilterProducts event, Emitter<ProductState> emit) async {
     emit(state.copyWith(status: ProductStatus.loading));
     try {
       await for (final result
-      in _filterProductsUsecase.call(params: event.filterOption)) {
+          in _filterProductsUsecase.call(params: event.filterOption)) {
         result.fold(
-              (failure) => emit(state.copyWith(
+          (failure) => emit(state.copyWith(
               status: ProductStatus.failure, errorMessage: failure.message)),
-              (products) {
+          (products) {
             final parts = event.filterOption.split('|');
             final categoryId = parts[0];
             final brandId = parts[1];
@@ -192,5 +175,66 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(state.copyWith(
           status: ProductStatus.failure, errorMessage: e.toString()));
     }
+  }
+  Future<void> _onFetchProductByCategoryId(
+      FetchProductByCategoryId event, Emitter<ProductState> emit) async {
+    emit(state.copyWith(status: ProductStatus.loading));
+    try {
+      await for (final result
+      in _fetchProductByCategoryIdUsecase.call(params: event.categoryId)) {
+        result.fold(
+                (failure) {
+              print('Fetch Product Failure: ${failure.message}');
+              emit(state.copyWith(
+                status: ProductStatus.failure,
+                errorMessage: failure.message,
+              ));
+            },
+                (categoryProducts) {
+              print('Fetched Products Count: ${categoryProducts.length}');
+              print('First Product: ${categoryProducts.isNotEmpty ? categoryProducts.first.toJson() : "No Products"}');
+
+              // Các bước xử lý còn lại như trước
+              final brandIds = categoryProducts
+                  .map((product) => product.brand!.id)
+                  .toSet()
+                  .toList();
+
+              print('Brand IDs: $brandIds');
+
+              final relatedBrands = state.brands
+                  .where((brand) => brandIds.contains(brand.id))
+                  .toList();
+
+              print('Related Brands: $relatedBrands');
+
+              final thumbnailImages = categoryProducts
+                  .take(3)
+                  .map((product) => (product.thumbnail?.isNotEmpty ?? false)
+                  ? product.thumbnail.toString()
+                  : AppImages.iphone13prm)
+                  .toList()
+                  .cast<String>();
+
+              print('Thumbnail Images: $thumbnailImages');
+
+              emit(state.copyWith(
+                status: ProductStatus.success,
+                categoryProducts: categoryProducts,
+                relatedBrands: relatedBrands,
+                thumbnailImages: thumbnailImages,
+              ));
+            }
+        );
+      }
+    } catch (e) {
+      print('Error in Fetch Product: $e');
+      emit(state.copyWith(
+          status: ProductStatus.failure, errorMessage: e.toString()));
+    }
+  }
+
+  FutureOr<void> _onResetProductState(ResetProductState event, Emitter<ProductState> emit) {
+    emit(state.copyWith(status: ProductStatus.initial));
   }
 }

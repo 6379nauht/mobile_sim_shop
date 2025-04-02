@@ -6,8 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:mobile_sim_shop/core/utils/constants/sizes.dart';
 import 'package:mobile_sim_shop/core/widgets/appbar/appbar.dart';
 import 'package:mobile_sim_shop/core/widgets/text/section_heading.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_bloc.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/widgets/delete_confirmation_dialog.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/widgets/profile_menu.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/widgets/update_field_dialog.dart';
@@ -15,6 +14,8 @@ import 'package:mobile_sim_shop/features/personalization/presentation/pages/prof
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/widgets/update_phone_dialog.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/pages/profile/widgets/update_birth_date_picker.dart';
 import 'package:mobile_sim_shop/features/auth/data/models/user_model.dart';
+
+import '../../blocs/profile/profile_state.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

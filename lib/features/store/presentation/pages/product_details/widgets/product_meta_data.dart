@@ -12,6 +12,7 @@ import 'package:mobile_sim_shop/core/widgets/images/circular_image.dart';
 import 'package:mobile_sim_shop/core/widgets/text/brand_title_text_icon.dart';
 import 'package:mobile_sim_shop/core/widgets/text/product_title_text.dart';
 import 'package:mobile_sim_shop/features/store/data/models/product_model.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
 
 import '../../../../data/models/brand_model.dart';
 import '../../../blocs/product/product_bloc.dart';
@@ -24,6 +25,9 @@ class ProductMetaData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Make sure the Column has a defined width constraint from its parent
+    if (product.brand?.id != null) {
+      context.read<ProductBloc>().add(FetchBrandById(brandId: product.brand!.id));
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min, // Add this to ensure proper size calculation
@@ -103,17 +107,12 @@ class ProductMetaData extends StatelessWidget {
         /// Brand
         BlocBuilder<ProductBloc, ProductState>(
           builder: (context, state) {
-            final brand = product.brand != null && state.brands.isNotEmpty
-                ? state.brands.firstWhere(
-                  (b) => b.id == product.brand!.id,
-              orElse: () => BrandModel(id: '', name: 'Unknown', image: ''),
-            )
-                : product.brand;
+            final brand = state.brand;
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularImage(
-                  image: brand?.image ?? AppImages.iconPhone,
+                  image: brand?.image ?? 'https://i.imgur.com/lbkxvtE.png',
                   width: 32.w,
                   height: 32.h,
                   overlayColor: AppHelperFunctions.isDarkMode(context)

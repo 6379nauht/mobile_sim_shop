@@ -14,6 +14,8 @@ class FetchAllProducts extends ProductEvent {}
 class FetchProductById extends ProductEvent {
   final String productId;
   const FetchProductById({required this.productId});
+  @override
+  List<Object?> get props => [productId];
 }
 
 class FetchAllBrands extends ProductEvent {}
@@ -21,20 +23,30 @@ class FetchAllBrands extends ProductEvent {}
 class FetchBrandById extends ProductEvent {
   final String brandId;
   const FetchBrandById({required this.brandId});
+  @override
+  List<Object?> get props => [brandId];
 }
 
 class FetchVariationsByProductId extends ProductEvent {
   final String productId;
   const FetchVariationsByProductId({required this.productId});
-}
-
-class FetchProductWithDetails extends ProductEvent {
-  final String productId;
-  const FetchProductWithDetails({required this.productId});
+  @override
+  List<Object?> get props => [productId];
 }
 
 class FilterProducts extends ProductEvent {
   final String filterOption;
 
   const FilterProducts({required this.filterOption});
+  @override
+  List<Object?> get props => [filterOption];
 }
+
+class FetchProductByCategoryId extends ProductEvent {
+  final String categoryId;
+  const FetchProductByCategoryId({required this.categoryId});
+  @override
+  List<Object?> get props => [categoryId];
+}
+
+class ResetProductState extends ProductEvent {}

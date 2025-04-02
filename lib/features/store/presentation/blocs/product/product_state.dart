@@ -14,11 +14,17 @@ class ProductState extends Equatable {
   final List<ProductVariationModel> productVariation;
   final ProductStatus status;
   final String? errorMessage;
+  final List<ProductModel> categoryProducts; // Sản phẩm theo danh mục
+  final List<BrandModel> relatedBrands; // Thương hiệu liên quan
+  final List<String> thumbnailImages;
   const ProductState(
       {this.products = const [],
       this.brands = const [],
       this.productVariation = const [],
       this.filterProducts = const [],
+      this.categoryProducts = const [],
+      this.relatedBrands = const [],
+      this.thumbnailImages = const [],
       this.status = ProductStatus.initial,
       this.product,
       this.brand,
@@ -29,6 +35,9 @@ class ProductState extends Equatable {
       List<BrandModel>? brands,
       List<ProductModel>? filterProducts,
       List<ProductVariationModel>? productVariation,
+      List<ProductModel>? categoryProducts,
+      List<BrandModel>? relatedBrands,
+      List<String>? thumbnailImages,
       ProductModel? product,
       BrandModel? brand,
       ProductStatus? status,
@@ -41,6 +50,9 @@ class ProductState extends Equatable {
         brand: brand ?? this.brand,
         productVariation: productVariation ?? this.productVariation,
         status: status ?? this.status,
+        categoryProducts: categoryProducts ?? this.categoryProducts,
+        relatedBrands: relatedBrands ?? this.relatedBrands,
+        thumbnailImages: thumbnailImages ?? this.thumbnailImages,
         errorMessage: errorMessage ?? this.errorMessage);
   }
 
@@ -54,6 +66,9 @@ class ProductState extends Equatable {
         productVariation,
         status,
         filterProducts,
-        errorMessage
+        errorMessage,
+        categoryProducts,
+        relatedBrands,
+        thumbnailImages
       ];
 }

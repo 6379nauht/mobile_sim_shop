@@ -18,18 +18,27 @@ import 'package:mobile_sim_shop/features/auth/presentation/blocs/password_config
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signin/signin_bloc.dart';
 import 'package:mobile_sim_shop/features/auth/presentation/blocs/signup/signup_bloc.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/delete_account_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/fetch_adddresss_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/remove_address_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/save_address_usecase.dart';
+import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_address_usecase.dart';
 import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_user_usecase.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_event.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/address/address_bloc.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/address/address_event.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_bloc.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_brands_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_brand_by_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_id_usecase.dart';
-import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_with_details_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_subcategories_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_variation_by_product_id_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/filter_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_banners_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_categories_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/get_wishlist_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/remove_wishlist_item_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/save_wishlist_item_usecase.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/banner/banner_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/banner/banner_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_bloc.dart';
@@ -37,9 +46,12 @@ import 'package:mobile_sim_shop/features/store/presentation/blocs/category/categ
 import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/wishlist/wishlist_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/wishlist/wishlist_event.dart';
 
 import 'core/utils/theme/app_theme.dart';
 import 'features/auth/presentation/blocs/signin/signin_event.dart';
+import 'features/personalization/presentation/blocs/profile/profile_event.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -102,7 +114,8 @@ class App extends StatelessWidget {
 
         ///Category
         BlocProvider<CategoryBloc>(
-            create: (_) => CategoryBloc(getIt<GetAllCategoriesUsecase>())
+            create: (_) => CategoryBloc(getIt<GetAllCategoriesUsecase>(),
+                getIt<FetchSubCategoriesUsecase>())
               ..add(LoadCategories())),
 
         ///Banner
@@ -116,13 +129,25 @@ class App extends StatelessWidget {
                 getIt<FetchProductByIdUsecase>(),
                 getIt<FetchAllBrandsUsecase>(),
                 getIt<FetchBrandByIdUsecase>(),
-                getIt<FetchProductWithDetailsUsecase>(),
                 getIt<FetchVariationByProductIdUsecase>(),
-                getIt<FilterProductsUsecase>()
-            )
+                getIt<FilterProductsUsecase>(),
+                getIt<FetchProductByCategoryIdUsecase>())
               ..add(FetchAllProducts())
-              ..add(FetchAllBrands())
-        ),
+              ..add(FetchAllBrands())),
+
+        BlocProvider<WishlistBloc>(
+            create: (_) => WishlistBloc(
+                  getIt<GetWishListUsecase>(),
+                  getIt<RemoveWishlistItemUsecase>(),
+                  getIt<SaveWishlistItemUsecase>(),
+                )..add(const LoadWishlist())),
+        BlocProvider<AddressBloc>(
+          create: (_) => AddressBloc(
+              getIt<SaveAddressUsecase>(), getIt<GetCurrentUserUsecase>(),
+              getIt<FetchAddressUsecase>(), getIt<RemoveAddressUsecase>(), getIt<UpdateAddressUsecase>()
+          )
+            ..add(LoadAddress()),
+        )
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.router, // Sử dụng GoRouter

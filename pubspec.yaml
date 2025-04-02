@@ -36,15 +36,17 @@ dependencies:
   iconsax: ^0.0.8
   cupertino_icons: ^1.0.8
   url_launcher: ^6.1.10  # Thêm để mở URL đăng nhập
-  uni_links3: ^0.5.3
   webview_flutter: ^4.4.2
   uuid: ^4.5.1
   flutter_secure_storage: ^9.0.0
   image_picker: ^1.0.8
   http: ^1.2.0
+  rxdart: ^0.27.2
   #fonts
   google_fonts: ^6.2.1
-
+  google_maps_flutter: ^2.12.0
+  geolocator: ^10.0.0
+  geocoding: ^2.1.0
   #local source
   shared_preferences: ^2.5.2
 

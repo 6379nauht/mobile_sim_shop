@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_sim_shop/features/auth/data/models/user_model.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_bloc.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_event.dart';
-import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile_state.dart';
+import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_bloc.dart';
+
+import '../../../blocs/profile/profile_event.dart';
+import '../../../blocs/profile/profile_state.dart';
 
 class UpdateFieldDialog extends StatefulWidget {
   final UserModel user;

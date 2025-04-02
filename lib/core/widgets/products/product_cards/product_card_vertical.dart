@@ -19,6 +19,9 @@ import '../../../../features/store/domain/entities/brand.dart';
 import '../../../../features/store/presentation/blocs/product/product_bloc.dart';
 import '../../../../features/store/presentation/blocs/product/product_event.dart';
 import '../../../../features/store/presentation/blocs/product/product_state.dart';
+import '../../../../features/store/presentation/blocs/wishlist/wishlist_bloc.dart';
+import '../../../../features/store/presentation/blocs/wishlist/wishlist_event.dart';
+import '../../../../features/store/presentation/blocs/wishlist/wishlist_state.dart';
 import '../../../router/routes.dart';
 import '../../../utils/validators/validation.dart';
 
@@ -85,12 +88,31 @@ class ProductCardVertical extends StatelessWidget {
                         ),
                       ),
                     ),
-                  const Positioned(
+                  Positioned(
                     top: 0,
                     right: 0,
-                    child: CircularIcon(
-                      icon: Iconsax.heart5,
-                      iconColor: Colors.red,
+                    child: BlocBuilder<WishlistBloc, WishlistState>(
+                      builder: (context, state) {
+                        final isInWishlist = state.wishlist.contains(product.id);
+                        final isLoading = state.status == WishlistStatus.loading;
+                        return CircularIcon(
+                          icon: isLoading
+                              ? Iconsax.activity // Biểu tượng loading
+                              : isInWishlist
+                              ? Iconsax.heart5
+                              : Iconsax.heart,
+                          iconColor: isInWishlist ? Colors.red : null,
+                          onPressed: isLoading
+                              ? null // Vô hiệu hóa khi đang tải
+                              : () {
+                            if (isInWishlist) {
+                              context.read<WishlistBloc>().add(RemoveFromWishlist(product.id));
+                            } else {
+                              context.read<WishlistBloc>().add(AddToWishlist(product.id));
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
                 ],
