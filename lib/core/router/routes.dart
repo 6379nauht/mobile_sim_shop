@@ -47,6 +47,7 @@ class Routes {
   static const allProducts = '/all_products';
   static const allBrands = '/all_brands';
   static const brandProducts = '/brand_products';
+  static const search = '/search';
 
   ///Store Name
   static const homeName = 'home';
@@ -60,6 +61,7 @@ class Routes {
   static const allProductsName = 'all_products';
   static const allBrandsName = 'all_brands';
   static const brandProductsName = 'brand_products';
+  static const searchName = 'search';
 
 
 

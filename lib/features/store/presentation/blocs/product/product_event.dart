@@ -50,3 +50,11 @@ class FetchProductByCategoryId extends ProductEvent {
 }
 
 class ResetProductState extends ProductEvent {}
+class ResetSelectedVariations extends ProductEvent {}
+class SelectVariation extends ProductEvent {
+  final String attributeName;
+  final String? value; // null nếu bỏ chọn
+  const SelectVariation({required this.attributeName, this.value});
+  @override
+  List<Object?> get props => [attributeName, value];
+}

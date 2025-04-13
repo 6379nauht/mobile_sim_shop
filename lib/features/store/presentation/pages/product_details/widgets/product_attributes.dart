@@ -14,30 +14,16 @@ import 'package:mobile_sim_shop/features/store/presentation/blocs/product/produc
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_state.dart';
 
-class ProductAttributes extends StatefulWidget {
+class ProductAttributes extends StatelessWidget {
   final ProductModel product;
 
   const ProductAttributes({super.key, required this.product});
 
-  @override
-  State<ProductAttributes> createState() => _ProductAttributesState();
-}
-
-class _ProductAttributesState extends State<ProductAttributes> {
-  final Map<String, String> _selectedAttributes = {};
-  ProductVariationModel? _selectedVariation;
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<ProductBloc>().add(FetchVariationsByProductId(productId: widget.product.id));
-  }
-
-  ProductVariationModel? _findVariation(List<ProductVariationModel> variations) {
-    if (_selectedAttributes.isEmpty || variations.isEmpty) return null;
+  ProductVariationModel? _findVariation(List<ProductVariationModel> variations, Map<String, String> selectedAttributes) {
+    if (selectedAttributes.isEmpty || variations.isEmpty) return null;
     try {
       return variations.firstWhere(
-            (variation) => _selectedAttributes.entries.every(
+            (variation) => selectedAttributes.entries.every(
               (entry) => variation.attributeValues[entry.key] == entry.value,
         ),
         orElse: () => ProductVariationModel.empty(),
@@ -55,11 +41,9 @@ class _ProductAttributesState extends State<ProductAttributes> {
     return attributeKeys;
   }
 
-  // Lấy các giá trị khả dụng cho một thuộc tính dựa trên các lựa chọn trước đó
-  Set<String> _getAvailableValues(
-      List<ProductVariationModel> variations, String attributeName) {
+  Set<String> _getAvailableValues(List<ProductVariationModel> variations, String attributeName, Map<String, String> selectedAttributes) {
     return variations
-        .where((variation) => _selectedAttributes.entries
+        .where((variation) => selectedAttributes.entries
         .where((entry) => entry.key != attributeName)
         .every((entry) => variation.attributeValues[entry.key] == entry.value))
         .map((v) => v.attributeValues[attributeName])
@@ -74,7 +58,7 @@ class _ProductAttributesState extends State<ProductAttributes> {
     return BlocBuilder<ProductBloc, ProductState>(
       builder: (context, state) {
         final variations = state.productVariation ?? [];
-        _selectedVariation = _findVariation(variations);
+        final selectedVariation = _findVariation(variations, state.selectedVariations);
 
         if (state.status == ProductStatus.loading) {
           return const Center(child: CircularProgressIndicator());
@@ -87,14 +71,14 @@ class _ProductAttributesState extends State<ProductAttributes> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-        if (_selectedVariation != null && _selectedVariation!.id.isNotEmpty) ...[
-            RoundedContainer(
-              backgroundColor: dark ? AppColors.darkerGrey : AppColors.grey,
-              padding: EdgeInsets.all(AppSizes.md.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
+            if (selectedVariation != null && selectedVariation.id.isNotEmpty) ...[
+              RoundedContainer(
+                backgroundColor: dark ? AppColors.darkerGrey : AppColors.grey,
+                padding: EdgeInsets.all(AppSizes.md.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     const SectionHeading(title: 'Variation', showActionButton: false),
                     SizedBox(height: AppSizes.spaceBtwItems.h / 2),
                     Padding(
@@ -112,20 +96,18 @@ class _ProductAttributesState extends State<ProductAttributes> {
                                   spacing: AppSizes.xs.w,
                                   children: [
                                     Text(
-                                      '${_selectedVariation!.price.toStringAsFixed(0)} VND',
+                                      '${selectedVariation.price.toStringAsFixed(0)} VND',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context).textTheme.titleSmall!.apply(
-                                        decoration: _selectedVariation!.salePrice > 0 &&
-                                            _selectedVariation!.salePrice != _selectedVariation!.price
+                                        decoration: selectedVariation.salePrice > 0 && selectedVariation.salePrice != selectedVariation.price
                                             ? TextDecoration.lineThrough
                                             : null,
                                       ),
                                     ),
-                                    if (_selectedVariation!.salePrice > 0 &&
-                                        _selectedVariation!.salePrice != _selectedVariation!.price)
+                                    if (selectedVariation.salePrice > 0 && selectedVariation.salePrice != selectedVariation.price)
                                       Text(
-                                        '${_selectedVariation!.salePrice.toStringAsFixed(0)} VND',
+                                        '${selectedVariation.salePrice.toStringAsFixed(0)} VND',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context).textTheme.titleMedium,
@@ -142,7 +124,7 @@ class _ProductAttributesState extends State<ProductAttributes> {
                               const ProductTitleText(title: 'Tình trạng: ', smallSizes: true),
                               Flexible(
                                 child: Text(
-                                  _selectedVariation!.stock > 0 ? 'Còn hàng' : 'Hết hàng',
+                                  selectedVariation.stock > 0 ? 'Còn hàng' : 'Hết hàng',
                                   style: Theme.of(context).textTheme.bodyLarge,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -152,16 +134,14 @@ class _ProductAttributesState extends State<ProductAttributes> {
                         ],
                       ),
                     ),
-                ],
+                  ],
+                ),
               ),
-            ),
-        ],
+            ],
             SizedBox(height: AppSizes.spaceBtwItems.h),
-
-            /// Hiển thị thuộc tính động với giá trị khả dụng
             if (variations.isNotEmpty)
               ..._getAttributeKeys(variations).map((attributeName) {
-                final availableValues = _getAvailableValues(variations, attributeName);
+                final availableValues = _getAvailableValues(variations, attributeName, state.selectedVariations);
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -171,15 +151,14 @@ class _ProductAttributesState extends State<ProductAttributes> {
                       spacing: 8.w,
                       children: availableValues.map((value) => AppChoiceChip(
                         text: value,
-                        selected: _selectedAttributes[attributeName] == value,
+                        selected: state.selectedVariations[attributeName] == value,
                         onSelected: (selected) {
-                          setState(() {
-                            if (selected) {
-                              _selectedAttributes[attributeName] = value;
-                            } else {
-                              _selectedAttributes.remove(attributeName);
-                            }
-                          });
+                          context.read<ProductBloc>().add(
+                            SelectVariation(
+                              attributeName: attributeName,
+                              value: selected ? value : null,
+                            ),
+                          );
                         },
                       )).toList(),
                     ),

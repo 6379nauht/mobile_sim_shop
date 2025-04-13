@@ -17,10 +17,11 @@ import '../text/brand_title_text_icon.dart';
 
 class BrandCart extends StatelessWidget {
   final BrandModel brand;
+  final bool showBorder;
   const BrandCart({
     super.key, required this.showBorder, required this.brand,
   });
-final bool showBorder;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

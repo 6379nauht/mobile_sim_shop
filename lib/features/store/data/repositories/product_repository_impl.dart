@@ -3,13 +3,16 @@ import 'package:dartz/dartz.dart';
 import 'package:mobile_sim_shop/core/errors/failures.dart';
 
 import 'package:mobile_sim_shop/features/store/data/models/brand_model.dart';
-
+import 'package:mobile_sim_shop/features/store/data/models/fetch_variation_params.dart';
+import 'package:mobile_sim_shop/features/store/data/models/get_variation_id_attributes_params.dart';
 import 'package:mobile_sim_shop/features/store/data/models/product_model.dart';
 
 import 'package:mobile_sim_shop/features/store/data/models/product_variation_model.dart';
+import 'package:mobile_sim_shop/features/store/data/models/search_product_params.dart';
 import 'package:mobile_sim_shop/features/store/data/sources/product_firebase_service.dart';
 
 import '../../../../core/dependency_injection/locator.dart';
+import '../../domain/entities/payment_method.dart';
 import '../../domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl implements ProductRepository{
@@ -26,8 +29,8 @@ class ProductRepositoryImpl implements ProductRepository{
   }
 
   @override
-  Stream<Either<Failure, BrandModel?>> fetchBrandById(String brandId) {
-    return _firebaseService.fetchBrandById(brandId);
+  Future<Either<Failure, BrandModel?>> fetchBrandById(String brandId) async{
+    return await _firebaseService.fetchBrandById(brandId);
   }
 
   @override
@@ -50,4 +53,26 @@ class ProductRepositoryImpl implements ProductRepository{
   Stream<Either<Failure, List<ProductModel>>> fetchProductsByCategoryId(String categoryId) {
     return _firebaseService.fetchProductsByCategoryId(categoryId);
   }
+
+  @override
+  Future<Either<Failure, ProductVariationModel>> fetchVariation(FetchVariationParams params) async {
+    return await _firebaseService.fetchVariation(params);
+  }
+
+  @override
+  Future<Either<Failure, String?>> getVariationIdFromAttributes(GetVariationIdAttributesParams params)async {
+    return await _firebaseService.getVariationIdFromAttributes(params);
+  }
+
+  @override
+  Future<Either<Failure, List<ProductModel>>> searchProducts(SearchProductParams? params) async{
+    return await _firebaseService.searchProducts(params);
+  }
+
+  @override
+  Future<Either<Failure, List<String>>> fetchSuggestions(String query) async{
+    return await _firebaseService.fetchSuggestions(query);
+  }
+
+
 }

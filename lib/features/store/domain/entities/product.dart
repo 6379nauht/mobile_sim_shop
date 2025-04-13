@@ -20,7 +20,6 @@ class Product {
   List<String>? images;
   String productType;
   List<ProductAttributeModel>? productAttributes;
-  List<ProductVariationModel>? productVariations;
 
   Product({
     required this.id,
@@ -38,6 +37,5 @@ class Product {
     this.categoryId,
     this.description,
     this.productAttributes,
-    this.productVariations
 });
 }

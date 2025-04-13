@@ -45,4 +45,34 @@ class AppHelperFunctions {
         .join(' ');
   }
 
+  // Hàm hiển thị dialog xác nhận dùng chung
+  static Future<bool> showConfirmationDialog({
+    required BuildContext context,
+    required String title,
+    required String content,
+    String confirmText = 'Xác nhận',
+    String cancelText = 'Hủy',
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: true, // Cho phép đóng dialog khi nhấn ngoài
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false), // Trả về false khi hủy
+              child: Text(cancelText),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true), // Trả về true khi xác nhận
+              child: Text(confirmText),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false; // Mặc định trả về false nếu dialog bị đóng mà không chọn
+  }
 }

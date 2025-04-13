@@ -43,6 +43,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<FilterProducts>(_onFilterProducts);
     on<FetchProductByCategoryId>(_onFetchProductByCategoryId);
     on<ResetProductState>(_onResetProductState);
+    on<SelectVariation>(_onSelectVariation);
+    on<ResetSelectedVariations>(_onResetSelectedVariations);
+
+  }
+// Các phương thức hiện có giữ nguyên, chỉ thêm phương thức mới
+  Future<void> _onSelectVariation(SelectVariation event, Emitter<ProductState> emit) async {
+    final newSelectedVariations = Map<String, String>.from(state.selectedVariations);
+    if (event.value == null) {
+      newSelectedVariations.remove(event.attributeName); // Bỏ chọn
+    } else {
+      newSelectedVariations[event.attributeName] = event.value!; // Cập nhật lựa chọn
+    }
+    emit(state.copyWith(selectedVariations: newSelectedVariations));
   }
 
   Future<void> _onFetchAllProducts(
@@ -108,21 +121,25 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       FetchBrandById event, Emitter<ProductState> emit) async {
     emit(state.copyWith(status: ProductStatus.loading));
     try {
-      await for (final either
-          in _fetchBrandByIdUsecase.call(params: event.brandId)) {
-        either.fold(
-          (failure) => emit(state.copyWith(
-              status: ProductStatus.failure, errorMessage: failure.message)),
-          (brand) =>
-              emit(state.copyWith(status: ProductStatus.success, brand: brand)),
-        );
-      }
+      final either = await _fetchBrandByIdUsecase.call(params: event.brandId);
+      either.fold(
+            (failure) => emit(state.copyWith(
+          status: ProductStatus.failure,
+          errorMessage: failure.message,
+        )),
+            (brand) => emit(state.copyWith(
+          status: ProductStatus.success,
+          brand: brand,
+        )),
+      );
     } catch (e) {
       emit(state.copyWith(
-          status: ProductStatus.failure,
-          errorMessage: 'Lỗi: fetch brand by id'));
+        status: ProductStatus.failure,
+        errorMessage: 'Lỗi: fetch brand by id',
+      ));
     }
   }
+
 
   Future<void> _onFetchVariationsByProductId(
       FetchVariationsByProductId event, Emitter<ProductState> emit) async {
@@ -236,5 +253,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   FutureOr<void> _onResetProductState(ResetProductState event, Emitter<ProductState> emit) {
     emit(state.copyWith(status: ProductStatus.initial));
+  }
+
+  FutureOr<void> _onResetSelectedVariations(ResetSelectedVariations event, Emitter<ProductState> emit) {
+  emit(state.copyWith(selectedVariations: {}));
+
   }
 }

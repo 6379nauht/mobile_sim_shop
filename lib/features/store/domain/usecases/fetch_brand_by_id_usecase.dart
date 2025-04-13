@@ -1,12 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobile_sim_shop/core/usecase/usecase.dart';
-import 'package:mobile_sim_shop/features/store/domain/repositories/product_repository.dart';
 
 import '../../../../core/dependency_injection/locator.dart';
+import '../repositories/product_repository.dart';
 
-class FetchBrandByIdUsecase implements UsecaseStream<Either, String>{
+
+class FetchBrandByIdUsecase implements UseCase<Either, String>{
   @override
-  Stream<Either> call({String? params}) {
-    return getIt<ProductRepository>().fetchBrandById(params!);
+  Future<Either> call({String? params}) async {
+    return await getIt<ProductRepository>().fetchBrandById(params!);
   }
+
+
 }

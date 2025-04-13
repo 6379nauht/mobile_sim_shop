@@ -18,11 +18,12 @@ class ProductModel extends Product {
     super.isFeatured,
     super.categoryId,
     super.description,
-    super.productAttributes, // Nhúng productAttributes
-    String? brandId, // Chỉ lưu brandId trong Firestore
+    super.productAttributes,
+    String? brandId,
   }) : super(
-    brand: brandId != null ? BrandModel(id: brandId, name: '', image: '') : null,
-    productVariations: null, // Không nhúng productVariations
+    brand: brandId != null
+        ? BrandModel(id: brandId, name: '', image: '')
+        : null,
   );
 
   static ProductModel empty() => ProductModel(
@@ -43,37 +44,42 @@ class ProductModel extends Product {
       'thumbnail': thumbnail,
       'productType': productType,
       'sku': sku,
-      'brandId': brand?.id, // Chỉ lưu brandId
-      'date': date?.toIso8601String(),
+      'brandId': brand?.id,
+      'date': date?.millisecondsSinceEpoch, // Lưu dưới dạng int64 cho Typesense
       'salePrice': salePrice,
       'isFeatured': isFeatured,
       'categoryId': categoryId,
       'description': description,
       'images': images,
-      'productAttributes': productAttributes?.map((attr) => attr.toJson()).toList(),
-    };
+      'productAttributes':
+      productAttributes?.map((attr) => attr.toJson()).toList(),
+    }..removeWhere((key, value) => value == null); // Loại bỏ các field null
   }
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     if (json.isEmpty) return ProductModel.empty();
     return ProductModel(
-      id: json['id'] as String,
-      title: json['title'] ?? '',
-      stock: json['stock'] ?? 0,
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      thumbnail: json['thumbnail'] ?? '',
-      productType: json['productType'] ?? '',
-      sku: json['sku'],
-      brandId: json['brandId'],
-      date: json['date'] != null ? DateTime.parse(json['date']) : null,
+      id: json['id']?.toString() ?? '', // Chuyển mọi giá trị thành String
+      title: json['title'] as String? ?? '',
+      stock: (json['stock'] as num?)?.toInt() ?? 0, // int32 từ Typesense
+      price: (json['price'] as num?)?.toDouble() ?? 0.0, // float từ Typesense
+      thumbnail: json['thumbnail'] as String? ?? '',
+      productType: json['productType'] as String? ?? '',
+      sku: json['sku'] as String?,
+      brandId: json['brandId'] as String?,
+      date: json['date'] != null
+          ? DateTime.fromMillisecondsSinceEpoch((json['date'] as num).toInt())
+          : null, // int64 từ Typesense
       salePrice: (json['salePrice'] as num?)?.toDouble() ?? 0.0,
-      isFeatured: json['isFeatured'],
-      categoryId: json['categoryId'],
-      description: json['description'],
-      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      isFeatured: json['isFeatured'] as bool?,
+      categoryId: json['categoryId'] as String?,
+      description: json['description'] as String?,
+      images: json['images'] != null
+          ? List<String>.from(json['images'] as List<dynamic>)
+          : null,
       productAttributes: json['productAttributes'] != null
-          ? (json['productAttributes'] as List)
-          .map((attr) => ProductAttributeModel.fromJson(attr))
+          ? (json['productAttributes'] as List<dynamic>)
+          .map((attr) => ProductAttributeModel.fromJson(attr as Map<String, dynamic>))
           .toList()
           : null,
     );
@@ -83,28 +89,43 @@ class ProductModel extends Product {
     if (!snapshot.exists) return ProductModel.empty();
     final data = snapshot.data() as Map<String, dynamic>?;
     if (data == null || data.isEmpty) return ProductModel.empty();
+
     return ProductModel(
       id: snapshot.id,
-      title: data['title'] ?? '',
-      stock: data['stock'] ?? 0,
-      price: (data['price'] as num?)?.toDouble() ?? 0.0,
-      thumbnail: data['thumbnail'] ?? '',
-      productType: data['productType'] ?? '',
-      sku: data['sku'],
-      brandId: data['brandId'],
+      title: data['title'] as String? ?? '',
+      stock: (data['stock'] is String
+          ? int.tryParse(data['stock'] as String)
+          : data['stock'] as num?)?.toInt() ??
+          0, // Xử lý cả String và num
+      price: (data['price'] is String
+          ? double.tryParse(data['price'] as String)
+          : data['price'] as num?)?.toDouble() ??
+          0.0, // Xử lý cả String và num
+      thumbnail: data['thumbnail'] as String? ?? '',
+      productType: data['productType'] as String? ?? '',
+      sku: data['sku'] as String?,
+      brandId: data['brandId'] as String?,
       date: data['date'] != null
           ? (data['date'] is String
-          ? DateTime.parse(data['date'])
-          : (data['date'] as Timestamp).toDate())
+          ? DateTime.parse(data['date'] as String)
+          : (data['date'] is Timestamp
+          ? (data['date'] as Timestamp).toDate()
+          : DateTime.fromMillisecondsSinceEpoch(
+          (data['date'] as num).toInt())))
+          : null, // Xử lý String, Timestamp, hoặc int
+      salePrice: (data['salePrice'] is String
+          ? double.tryParse(data['salePrice'] as String)
+          : data['salePrice'] as num?)?.toDouble() ??
+          0.0,
+      isFeatured: data['isFeatured'] as bool?,
+      categoryId: data['categoryId'] as String?,
+      description: data['description'] as String?,
+      images: data['images'] != null
+          ? List<String>.from(data['images'] as List<dynamic>)
           : null,
-      salePrice: (data['salePrice'] as num?)?.toDouble() ?? 0.0,
-      isFeatured: data['isFeatured'],
-      categoryId: data['categoryId'],
-      description: data['description'],
-      images: data['images'] != null ? List<String>.from(data['images']) : null,
       productAttributes: data['productAttributes'] != null
-          ? (data['productAttributes'] as List)
-          .map((attr) => ProductAttributeModel.fromJson(attr))
+          ? (data['productAttributes'] as List<dynamic>)
+          .map((attr) => ProductAttributeModel.fromJson(attr as Map<String, dynamic>))
           .toList()
           : null,
     );

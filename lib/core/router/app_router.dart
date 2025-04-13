@@ -20,6 +20,7 @@ import 'package:mobile_sim_shop/features/store/presentation/pages/checkout/check
 import 'package:mobile_sim_shop/features/store/presentation/pages/home/home.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/order/order.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/product_details/product_details.dart';
+import 'package:mobile_sim_shop/features/store/presentation/pages/search/search.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/store/store.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/sub_category/sub_categories.dart';
 import 'package:mobile_sim_shop/features/store/presentation/pages/wishlist/wishlist.dart';
@@ -242,6 +243,12 @@ class AppRouter {
             return NoTransitionPage(child: BrandProducts(brand: brand,));
             }
           ),
+      ///search
+      GoRoute(
+          path: Routes.search,
+          name: Routes.searchName,
+          pageBuilder: (_, state) =>
+          const NoTransitionPage(child: SearchPage())),
 
       ///BottomNavigation
       ShellRoute(

@@ -17,18 +17,21 @@ class ProductState extends Equatable {
   final List<ProductModel> categoryProducts; // Sản phẩm theo danh mục
   final List<BrandModel> relatedBrands; // Thương hiệu liên quan
   final List<String> thumbnailImages;
-  const ProductState(
-      {this.products = const [],
-      this.brands = const [],
-      this.productVariation = const [],
-      this.filterProducts = const [],
-      this.categoryProducts = const [],
-      this.relatedBrands = const [],
-      this.thumbnailImages = const [],
-      this.status = ProductStatus.initial,
-      this.product,
-      this.brand,
-      this.errorMessage});
+  final Map<String, String> selectedVariations;
+  const ProductState({
+    this.products = const [],
+    this.brands = const [],
+    this.productVariation = const [],
+    this.filterProducts = const [],
+    this.categoryProducts = const [],
+    this.relatedBrands = const [],
+    this.thumbnailImages = const [],
+    this.status = ProductStatus.initial,
+    this.product,
+    this.brand,
+    this.errorMessage,
+    this.selectedVariations = const {},
+  });
 
   ProductState copyWith(
       {List<ProductModel>? products,
@@ -40,6 +43,7 @@ class ProductState extends Equatable {
       List<String>? thumbnailImages,
       ProductModel? product,
       BrandModel? brand,
+      Map<String, String>? selectedVariations,
       ProductStatus? status,
       String? errorMessage}) {
     return ProductState(
@@ -52,6 +56,7 @@ class ProductState extends Equatable {
         status: status ?? this.status,
         categoryProducts: categoryProducts ?? this.categoryProducts,
         relatedBrands: relatedBrands ?? this.relatedBrands,
+        selectedVariations: selectedVariations ?? this.selectedVariations,
         thumbnailImages: thumbnailImages ?? this.thumbnailImages,
         errorMessage: errorMessage ?? this.errorMessage);
   }
@@ -69,6 +74,7 @@ class ProductState extends Equatable {
         errorMessage,
         categoryProducts,
         relatedBrands,
-        thumbnailImages
+        thumbnailImages,
+        selectedVariations,
       ];
 }

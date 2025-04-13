@@ -64,8 +64,6 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
         ));
       },
           (_) {
-        // Thành công: Không cần làm gì thêm vì cập nhật lạc quan đã đúng
-        // Tùy chọn: Lấy lại danh sách để đồng bộ (có thể bỏ qua)
       },
     );
   }

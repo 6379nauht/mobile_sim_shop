@@ -26,32 +26,49 @@ import 'package:mobile_sim_shop/features/personalization/domain/usecases/update_
 import 'package:mobile_sim_shop/features/personalization/presentation/blocs/address/address_bloc.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/blocs/address/address_event.dart';
 import 'package:mobile_sim_shop/features/personalization/presentation/blocs/profile/profile_bloc.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/add_to_cart_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/clear_cart_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_brands_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_all_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_brand_by_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_payment_method_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_product_by_id_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_subcategories_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_suggestions_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_variation_by_product_id_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/fetch_variation_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/filter_products_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_banners_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_all_categories_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/get_cart_item_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/get_variation_id_attributes_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/get_wishlist_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/remove_cart_item_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/remove_wishlist_item_usecase.dart';
 import 'package:mobile_sim_shop/features/store/domain/usecases/save_wishlist_item_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/search_product_usecase.dart';
+import 'package:mobile_sim_shop/features/store/domain/usecases/send_order_confirmation_email_usecase.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/banner/banner_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/banner/banner_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/carousel_slider/carousel_slider_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/cart/cart_bloc.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/cart/cart_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/category/category_event.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/product/product_event.dart';
+import 'package:mobile_sim_shop/features/store/presentation/blocs/search/search_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/wishlist/wishlist_bloc.dart';
 import 'package:mobile_sim_shop/features/store/presentation/blocs/wishlist/wishlist_event.dart';
 
 import 'core/utils/theme/app_theme.dart';
 import 'features/auth/presentation/blocs/signin/signin_event.dart';
 import 'features/personalization/presentation/blocs/profile/profile_event.dart';
+import 'features/store/domain/usecases/create_invoice_usecase.dart';
+import 'features/store/domain/usecases/create_payment_intent_usecase.dart';
+import 'features/store/domain/usecases/select_payment_method_usecase.dart';
+import 'features/store/domain/usecases/update_quantity_usecase.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -143,10 +160,46 @@ class App extends StatelessWidget {
                 )..add(const LoadWishlist())),
         BlocProvider<AddressBloc>(
           create: (_) => AddressBloc(
-              getIt<SaveAddressUsecase>(), getIt<GetCurrentUserUsecase>(),
-              getIt<FetchAddressUsecase>(), getIt<RemoveAddressUsecase>(), getIt<UpdateAddressUsecase>()
-          )
+              getIt<SaveAddressUsecase>(),
+              getIt<GetCurrentUserUsecase>(),
+              getIt<FetchAddressUsecase>(),
+              getIt<RemoveAddressUsecase>(),
+              getIt<UpdateAddressUsecase>())
             ..add(LoadAddress()),
+        ),
+
+        BlocProvider<CartBloc>(create: (_) {
+          final addressBloc = AddressBloc(
+            getIt<SaveAddressUsecase>(),
+            getIt<GetCurrentUserUsecase>(),
+            getIt<FetchAddressUsecase>(),
+            getIt<RemoveAddressUsecase>(),
+            getIt<UpdateAddressUsecase>(),
+          )..add(LoadAddress());
+
+          return CartBloc(
+              getIt<AddToCartUsecase>(),
+              getIt<GetCartItemUsecase>(),
+              getIt<UpdateQuantityUsecase>(),
+              getIt<RemoveCartItemUsecase>(),
+              getIt<ClearCartUsecase>(),
+              getIt<GetVariationIdAttributesUsecase>(),
+              getIt<FetchVariationUsecase>(),
+              getIt<FetchBrandByIdUsecase>(),
+              getIt<SelectPaymentMethodUsecase>(),
+              getIt<CreatePaymentIntentUsecase>(),
+              getIt<CreateInvoiceUsecase>(),
+              addressBloc,
+              getIt<FetchPaymentMethodUsecase>(),
+            getIt<GetCurrentUserUsecase>(),
+            getIt<SendOrderConfirmationEmailUsecase>()
+          )
+            ..add(LoadCart());
+        }),
+
+        BlocProvider<SearchBloc>(
+          create: (_) => SearchBloc(
+              getIt<SearchProductUsecase>(), getIt<FetchSuggestionsUsecase>()),
         )
       ],
       child: MaterialApp.router(

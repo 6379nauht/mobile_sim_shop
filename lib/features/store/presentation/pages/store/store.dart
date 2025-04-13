@@ -29,7 +29,8 @@ class StorePage extends StatefulWidget {
   State<StorePage> createState() => _StorePageState();
 }
 
-class _StorePageState extends State<StorePage> with SingleTickerProviderStateMixin {
+class _StorePageState extends State<StorePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -48,9 +49,12 @@ class _StorePageState extends State<StorePage> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(builder: (_, state) {
       if (state.status == CategoryStatus.loading) {
-        return const Scaffold(body: Center(child: CupertinoActivityIndicator()));
+        return const Scaffold(
+            body: Center(child: CupertinoActivityIndicator()));
       } else if (state.status == CategoryStatus.failure) {
-        return Scaffold(body: Center(child: Text(state.errorMessage ?? 'Lỗi tải danh mục')));
+        return Scaffold(
+            body:
+                Center(child: Text(state.errorMessage ?? 'Lỗi tải danh mục')));
       }
 
       final categories = state.categories;
@@ -60,7 +64,8 @@ class _StorePageState extends State<StorePage> with SingleTickerProviderStateMix
       return BlocBuilder<ProductBloc, ProductState>(builder: (_, state) {
         return Scaffold(
           appBar: AppAppBar(
-            title: Text('Store', style: Theme.of(context).textTheme.headlineMedium),
+            title: Text('Store',
+                style: Theme.of(context).textTheme.headlineMedium),
             actions: [CartCounterIcon(onPressed: () {})],
           ),
           body: NestedScrollView(
@@ -82,24 +87,28 @@ class _StorePageState extends State<StorePage> with SingleTickerProviderStateMix
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         SizedBox(height: AppSizes.spaceBtwItems.h),
-                        const SearchContainer(
+                        SearchContainer(
                           text: 'Tìm kiếm trong Store',
                           showBorder: true,
                           showBackground: false,
                           padding: EdgeInsets.zero,
+                          onTap: () => context.pushNamed(Routes.searchName),
                         ),
                         SizedBox(height: AppSizes.spaceBtwItems.h),
                         SectionHeading(
                           title: 'Thương hiệu hàng đầu',
                           showActionButton: true,
-                          onPressed: () => context.pushNamed(Routes.allBrandsName),
+                          onPressed: () =>
+                              context.pushNamed(Routes.allBrandsName),
                         ),
                         SizedBox(height: AppSizes.spaceBtwItems.h / 2.5),
                         GridLayout(
-                          itemCount: state.brands.length > 4 ? 4 : state.brands.length,
+                          itemCount:
+                              state.brands.length > 4 ? 4 : state.brands.length,
                           mainAxisExtent: 60,
                           itemBuilder: (_, index) {
-                            return BrandCart(showBorder: true, brand: state.brands[index]);
+                            return BrandCart(
+                                showBorder: true, brand: state.brands[index]);
                           },
                         ),
                       ],
@@ -107,7 +116,9 @@ class _StorePageState extends State<StorePage> with SingleTickerProviderStateMix
                   ),
                   bottom: AppTabBar(
                     controller: _tabController, // Sử dụng TabController
-                    tabs: categories.map((category) => Tab(child: Text(category.name))).toList(),
+                    tabs: categories
+                        .map((category) => Tab(child: Text(category.name)))
+                        .toList(),
                   ),
                 ),
               ];
@@ -118,10 +129,11 @@ class _StorePageState extends State<StorePage> with SingleTickerProviderStateMix
                   .asMap()
                   .entries
                   .map((entry) => CategoryTab(
-                category: entry.value,
-                tabIndex: entry.key,
-                tabController: _tabController, // Truyền TabController vào CategoryTab
-              ))
+                        category: entry.value,
+                        tabIndex: entry.key,
+                        tabController:
+                            _tabController, // Truyền TabController vào CategoryTab
+                      ))
                   .toList(),
             ),
           ),

@@ -35,7 +35,10 @@ class HomePage extends StatelessWidget {
                 children: [
                   const HomeAppBar(),
                   SizedBox(height: AppSizes.spaceBtwSections.h),
-                  const SearchContainer(text: 'Tìm kiếm trong store'),
+                  SearchContainer(
+                    text: 'Tìm kiếm trong store',
+                    onTap: () => context.pushNamed(Routes.searchName),
+                  ),
                   SizedBox(height: AppSizes.spaceBtwSections.h),
                   const Categories(),
                   SizedBox(

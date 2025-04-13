@@ -27,5 +27,8 @@ class AppImages {
   static const basePathIconCategories = 'assets/icons/categories/';
   static const String iconPhone = '${basePathIconCategories}icon_phone.png';
 
+  static const basePathIconCart = 'assets/icons/cart/';
+  static const String iconCash =  '${basePathIconCart}cash.png';
+  static const String iconStripe =  '${basePathIconCart}stripe.png';
 
 }
